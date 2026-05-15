@@ -227,6 +227,8 @@ header h1{font-size:15px;font-weight:600;letter-spacing:.3px}
     <a href="/sla.html" class="nav-link">SLA</a>
     <a href="/apps.html" class="nav-link">Catalogo</a>
   </div>
+  <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Tema chiaro/scuro">🌙</button>
+  <div id="nav-operator"></div>
   <div class="live-dot" id="status-dot" title="Sistema operativo"></div>
 </header>
 
@@ -924,5 +926,6 @@ if (pf) { sessionStorage.removeItem('chat_prefill'); document.getElementById('ms
 
 avvia();
 </script>
+<script src="/shared.js"></script>
 </body>
 </html>

@@ -91,16 +91,19 @@ async function executeStep(step, sessionId) {
 async function executePlan(plan, options = {}) {
   const sessionId = randomUUID();
   const { onStepUpdate } = options;
+  // Usa validationManager e auditLogger da options se forniti (DB), altrimenti fallback a in-memory
+  const val = options.validationManager || validazione;
+  const auditLog = options.auditLogger || audit;
   const execution = { sessionId, startedAt:new Date().toISOString(), plan, steps:[], pendingApprovals:[], status:'running', completedAt:null };
   for (let i = 0; i < plan.steps.length; i++) {
     const step = { ...plan.steps[i], stepIndex:i+1, stepTotal:plan.steps.length };
     if (onStepUpdate) onStepUpdate({ type:'step_start', step, execution });
     if (step.requires_validation) {
-      const validationId = validazione.createValidationRequest(step, { sessionId, intent:plan.intent, targetUser:plan.target_user?.userPrincipalName, stepIndex:i+1 });
+      const validationId = val.createValidationRequest(step, { sessionId, intent:plan.intent, targetUser:plan.target_user?.userPrincipalName, stepIndex:i+1 });
       step.status = 'in_attesa_validazione'; step.validationId = validationId;
       execution.steps.push(step); execution.pendingApprovals.push(validationId);
       if (onStepUpdate) onStepUpdate({ type:'validation_requested', step, validationId, execution });
-      const approvalResult = await validazione.waitForValidation(validationId, 120000);
+      const approvalResult = await val.waitForValidation(validationId, 120000);
       if (approvalResult.status === 'approvata') {
         step.status = 'in_esecuzione';
         if (onStepUpdate) onStepUpdate({ type:'step_approved', step, execution });
@@ -108,12 +111,12 @@ async function executePlan(plan, options = {}) {
         step.status = result.success ? 'completato' : 'errore'; step.result = result;
       } else if (approvalResult.status === 'rifiutata') {
         step.status = 'rifiutato'; step.rejectionReason = approvalResult.rejectionReason;
-        audit.log({ session_id:sessionId, event:'validation_rejected', step:step.action, reason:approvalResult.rejectionReason });
+        auditLog.log({ session_id:sessionId, event:'validation_rejected', step:step.action, reason:approvalResult.rejectionReason });
         if (onStepUpdate) onStepUpdate({ type:'step_rejected', step, execution });
         break;
       } else {
         step.status = 'scaduto';
-        audit.log({ session_id:sessionId, event:'validation_timeout', step:step.action });
+        auditLog.log({ session_id:sessionId, event:'validation_timeout', step:step.action });
         break;
       }
     } else {
@@ -131,7 +134,7 @@ async function executePlan(plan, options = {}) {
     : execution.steps.some(s=>s.status==='rifiutato') ? 'stopped_by_operator'
     : execution.steps.some(s=>s.status==='scaduto') ? 'timeout' : 'completato';
   execution.completedAt = new Date().toISOString();
-  audit.log({ session_id:sessionId, event:'execution_complete', status:execution.status, steps_total:plan.steps.length, steps_completed:execution.steps.filter(s=>s.status==='completato').length, steps_failed:execution.steps.filter(s=>s.status==='errore').length });
+  auditLog.log({ session_id:sessionId, event:'execution_complete', status:execution.status, steps_total:plan.steps.length, steps_completed:execution.steps.filter(s=>s.status==='completato').length, steps_failed:execution.steps.filter(s=>s.status==='errore').length });
   return execution;
 }
 

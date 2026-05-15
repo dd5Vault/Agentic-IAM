@@ -66,6 +66,8 @@ nav h1{font-size:15px;font-weight:600}
     <a href="/sla.html">Metriche SLA</a>
     <a href="/apps.html" class="active">Catalogo App</a>
   </div>
+  <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Tema chiaro/scuro" style="background:none;border:1px solid rgba(255,255,255,.25);color:white;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center">🌙</button>
+  <div id="nav-operator"></div>
 </nav>
 
 <div class="page">
@@ -191,5 +193,6 @@ function abilitaDallaCatalogo(appName) {
 load();
 setInterval(load, 15000);
 </script>
+<script src="/shared.js"></script>
 </body>
 </html>

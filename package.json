@@ -1,11 +1,14 @@
 {
   "name": "agentic-iam",
-  "version": "2.0.0",
-  "description": "Agentic IAM — Copilota Operativo PoC (locale, zero dipendenze esterne)",
+  "version": "3.0.0",
+  "description": "Agentic IAM — Copilota Operativo PoC (locale, SQLite, Login/RBAC)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "test": "node --test test/test.js"
   },
-  "dependencies": {}
+  "dependencies": {
+    "better-sqlite3": "^12.10.0"
+  }
 }
