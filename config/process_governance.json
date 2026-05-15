@@ -1,0 +1,97 @@
+{
+  "scopes": {
+    "DL_IAM": {
+      "label": "In scope DL IAM",
+      "items": [
+        "Abilitazioni applicative Azure (ERPCORE, ORDERHUB, AUTHFORMS, NETOPS, NETMON, WORKFLOW, QUALITY, JOBORDER, WEBPORTAL)",
+        "Creazione utenze cloud-only su Entra ID",
+        "Creazione utenze guest ed outsourcer",
+        "Censimento utenti su Entra ID",
+        "Reset password utenze cloud-only (non sincronizzate on-prem)",
+        "Verifica profili e ruoli assegnati su Entra ID",
+        "Troubleshooting accesso applicazioni Azure (se il problema è IAM)",
+        "Modifiche profilo su applicazioni in scope",
+        "Disabilitazione / riabilitazione utenze cloud"
+      ]
+    },
+    "DL_IAM_REDIRECT_PIM": {
+      "label": "Non in scope DL — Reindirizza a team PIM",
+      "items": [
+        "Attivazione ruoli PIM (Privileged Identity Management)",
+        "Richiesta ruoli amministrativi temporanei",
+        "Estensione durata assegnazione PIM",
+        "Richiesta Global Administrator / Exchange Admin / SharePoint Admin via PIM",
+        "Approvazione richieste PIM"
+      ],
+      "redirectTo": "Team PIM — aprire ticket su ServiceNow categoria 'PIM Access Request'",
+      "prerequisites": [
+        "Account Entra ID attivo e sincronizzato",
+        "MFA registrato",
+        "Ruolo censito nel catalogo PIM aziendale",
+        "Approvazione del proprio responsabile"
+      ]
+    },
+    "GA_APPLICATION_SUPPORT": {
+      "label": "Non in scope DL — Reindirizza a GA o supporto applicativo",
+      "items": [
+        "Errori funzionali nell'applicazione (non di accesso)",
+        "Configurazione profilo all'interno dell'applicazione",
+        "Dati mancanti o errati nell'applicazione",
+        "Performance o disponibilità dell'applicazione"
+      ],
+      "redirectTo": "GA applicativo — aprire ticket ServiceNow categoria 'Application Support'"
+    },
+    "ON_PREM_IAM": {
+      "label": "Non in scope DL — Reindirizza a IAM on-premise",
+      "items": [
+        "Reset password per utenze sincronizzate (AD on-prem)",
+        "Modifica attributi di utenze sincronizzate",
+        "Abilitazione/disabilitazione utenze sincronizzate",
+        "Creazione nuove utenze sincronizzate da AD"
+      ],
+      "redirectTo": "Team IAM on-premise — ServiceNow categoria 'AD Identity Management'",
+      "howToVerify": "Un'utenza è sincronizzata se in Entra ID il campo 'onPremisesSyncEnabled' è true"
+    }
+  },
+  "firstAccessGuide": {
+    "cloudOnly": {
+      "title": "Primo accesso — utenza cloud-only",
+      "steps": [
+        "1. Accedere a https://portal.office.com con le credenziali fornite via email",
+        "2. Al primo accesso verrà richiesto di cambiare la password temporanea",
+        "3. Registrare un metodo MFA: scaricare Microsoft Authenticator",
+        "4. Dopo la registrazione MFA, l'accesso alle applicazioni Azure sarà disponibile",
+        "5. Se un'applicazione non è visibile, aprire ticket alla DL IAM specificando app e profilo richiesto"
+      ]
+    },
+    "postMigration": {
+      "title": "Primo accesso post-migrazione on-prem → cloud",
+      "steps": [
+        "1. Le credenziali rimangono le stesse dell'account on-premise",
+        "2. Accedere a https://portal.office.com con username@dominio.it",
+        "3. Se richiesto, completare la registrazione MFA",
+        "4. I profili sulle applicazioni migrate vengono riassegnati automaticamente — verificare entro 24h",
+        "5. Se un profilo non è stato migrato, contattare la DL IAM con il numero del ticket di migrazione"
+      ]
+    },
+    "forgotPassword": {
+      "title": "Password dimenticata — procedura self-service",
+      "steps": [
+        "1. Andare su https://aka.ms/sspr",
+        "2. Inserire il proprio username aziendale",
+        "3. Verificare l'identità tramite MFA",
+        "4. Impostare la nuova password rispettando i requisiti di complessità",
+        "ATTENZIONE: funziona solo per utenze cloud-only. Per sincronizzate on-prem contattare team AD."
+      ]
+    }
+  },
+  "passwordPolicy": {
+    "minLength": 12,
+    "complexity": "Maiuscole + minuscole + numeri + simboli",
+    "expiryDays": 90,
+    "historyCount": 10,
+    "lockoutAttempts": 5,
+    "sspr": "Abilitato per utenze cloud-only",
+    "onPremSync": "Le password on-prem non sono resettabili dalla DL IAM"
+  }
+}

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Agentic IAM — Catalogo Applicazioni</title>
+<style>
+:root{--p:#3D0070;--pm:#7B00D4;--pl:#f3e8ff;--t:#0D6E8A;--tl:#e0f2f7;--o:#E8720C;--ol:#fff3e0;--r:#B91C1C;--rl:#fee2e2;--g:#1A7A4A;--gl:#d1fae5;--am:#92400E;--al:#fef3c7;--border:#e0e0e0;--text:#1a1a1a;--muted:#666;--gray:#f5f5f7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f0f5;color:var(--text)}
+nav{background:var(--p);color:white;display:flex;align-items:center;padding:0 22px;height:54px;gap:14px}
+nav h1{font-size:16px;font-weight:600}
+.nl{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+.nl a{color:rgba(255,255,255,.75);text-decoration:none;padding:5px 10px;border-radius:6px;font-size:11px;transition:background .15s}
+.nl a:hover,.nl a.active{background:rgba(255,255,255,.2);color:white}
+.page{max-width:1200px;margin:0 auto;padding:22px}
+.hdr{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.hdr h2{font-size:18px;font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:20px}
+.stat{background:white;border:0.5px solid var(--border);border-radius:10px;padding:14px 16px}
+.stat-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.stat-val{font-size:28px;font-weight:700;color:var(--pm)}
+.filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.fb{background:white;border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:11px;cursor:pointer;transition:all .15s;color:var(--text)}
+.fb:hover,.fb.active{background:var(--pm);color:white;border-color:var(--pm)}
+.apps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.app-card{background:white;border:0.5px solid var(--border);border-radius:12px;overflow:hidden;transition:box-shadow .15s}
+.app-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.09)}
+.app-head{padding:14px 16px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.app-logo{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:white;flex-shrink:0}
+.app-name{font-size:14px;font-weight:700}
+.app-full{font-size:11px;color:var(--muted)}
+.app-badges{display:flex;gap:5px;margin-left:auto;flex-wrap:wrap}
+.pill{display:inline-block;font-size:9px;font-weight:600;padding:2px 7px;border-radius:8px}
+.p-rg{background:var(--ol);color:var(--o)} .p-norg{background:var(--gl);color:var(--g)}
+.p-saml{background:var(--pl);color:var(--pm)} .p-oidc{background:var(--tl);color:var(--t)}
+.app-body{padding:12px 16px}
+.profiles-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+.profile-list{display:flex;flex-direction:column;gap:5px}
+.profile-row{display:flex;align-items:center;gap:7px;padding:6px 8px;background:var(--gray);border-radius:6px}
+.profile-id{font-size:11px;font-weight:700;color:var(--p);min-width:90px}
+.profile-name{font-size:11px;color:var(--text);flex:1}
+.risk-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.rd-low{background:var(--g)} .rd-med{background:var(--o)} .rd-high{background:var(--r)}
+.app-footer{padding:10px 16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.owner-lbl{font-size:10px;color:var(--muted)}
+.owner-val{font-size:11px;font-weight:500;color:var(--text)}
+.enable-btn{background:var(--pm);color:white;border:none;padding:5px 13px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;transition:opacity .15s}
+.enable-btn:hover{opacity:.85}
+.users-assigned{font-size:10px;color:var(--muted);margin-top:3px}
+.sso-badge{font-size:9px;color:var(--muted);border:0.5px solid var(--border);padding:1px 6px;border-radius:5px}
+</style>
+</head>
+<body>
+<nav>
+  <div style="font-size:17px">🛡️</div>
+  <h1>Agentic IAM v3.0</h1>
+  <div class="nl">
+    <a href="/">Chat</a>
+    <a href="/dashboard.html">Dashboard</a>
+    <a href="/tickets.html">Ticket DL</a>
+    <a href="/sla.html">Metriche SLA</a>
+    <a href="/apps.html" class="active">Catalogo App</a>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="hdr">
+    <h2>📱 Catalogo Applicazioni Azure</h2>
+    <span style="font-size:11px;color:var(--muted);margin-left:auto" id="last-upd">Caricamento...</span>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-lbl">App totali</div><div class="stat-val" id="s-tot">—</div></div>
+    <div class="stat"><div class="stat-lbl">Richiedono autorizzazione RA</div><div class="stat-val" style="color:var(--o)" id="s-rg">—</div></div>
+    <div class="stat"><div class="stat-lbl">Senza autorizzazione RA</div><div class="stat-val" style="color:var(--g)" id="s-norg">—</div></div>
+    <div class="stat"><div class="stat-lbl">Profili totali</div><div class="stat-val" style="color:var(--t)" id="s-prof">—</div></div>
+  </div>
+
+  <div class="filters">
+    <button class="fb active" onclick="setFilter('all',this)">Tutte le app</button>
+    <button class="fb" onclick="setFilter('rg',this)">Richiedono autorizzazione RA</button>
+    <button class="fb" onclick="setFilter('norg',this)">Senza autorizzazione RA</button>
+    <button class="fb" onclick="setFilter('saml',this)">SSO: SAML</button>
+    <button class="fb" onclick="setFilter('oidc',this)">SSO: OIDC</button>
+  </div>
+
+  <div class="apps-grid" id="apps-grid">Caricamento...</div>
+</div>
+
+<script>
+let allApps = [], allUsers = [], currentFilter = 'all';
+
+const appColors = {
+  'ERPCORE':'#3D0070','ORDERHUB':'#0D6E8A','AUTHFORMS':'#1A7A4A',
+  'NETOPS':'#E8720C','NETMON':'#B91C1C','WORKFLOW':'#92400E',
+  'QUALITY':'#185FA5','JOBORDER':'#5DCAA5','WEBPORTAL':'#7B00D4'
+};
+
+async function load() {
+  const [catData, usersData] = await Promise.all([
+    fetch('/api/apps').then(r=>r.json()).catch(()=>null),
+    fetch('/api/users').then(r=>r.json()).catch(()=>null)
+  ]);
+  if (!catData) return;
+  allApps  = catData.applications;
+  allUsers = usersData?.data || [];
+  document.getElementById('last-upd').textContent = 'Aggiornato: ' + new Date().toLocaleTimeString('it-IT');
+  const totalProfiles = allApps.reduce((a,app) => a + app.availableProfiles.length, 0);
+  document.getElementById('s-tot').textContent  = allApps.length;
+  document.getElementById('s-rg').textContent   = allApps.filter(a=>a.respAppRequired).length;
+  document.getElementById('s-norg').textContent = allApps.filter(a=>!a.respAppRequired).length;
+  document.getElementById('s-prof').textContent = totalProfiles;
+  render();
+}
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function usersPerApp(appName) {
+  return allUsers.filter(u => u.appAssignments?.some(a => a.startsWith(appName + '-') || a.startsWith(appName.substring(0,3)))).length;
+}
+
+function render() {
+  const filtered = allApps.filter(app => {
+    if (currentFilter === 'rg')   return app.respAppRequired;
+    if (currentFilter === 'norg') return !app.respAppRequired;
+    if (currentFilter === 'saml') return app.ssoProtocol === 'SAML';
+    if (currentFilter === 'oidc') return app.ssoProtocol === 'OIDC';
+    return true;
+  });
+
+  if (!filtered.length) { document.getElementById('apps-grid').innerHTML = '<p style="color:var(--muted);font-size:13px;padding:20px">Nessuna applicazione in questa categoria.</p>'; return; }
+
+  document.getElementById('apps-grid').innerHTML = filtered.map(app => {
+    const color = appColors[app.name] || '#3D0070';
+    const rgPill = app.respAppRequired
+      ? '<span class="pill p-rg">Autorizzazione RA obbligatoria</span>'
+      : '<span class="pill p-norg">No autorizzazione RA</span>';
+    const ssoPill = `<span class="pill ${app.ssoProtocol==='SAML'?'p-saml':'p-oidc'}">${app.ssoProtocol}</span>`;
+    const usersN  = usersPerApp(app.name);
+    const profiles = app.availableProfiles.map(p => {
+      const rdClass = p.riskLevel === 'LOW' ? 'rd-low' : p.riskLevel === 'MEDIUM' ? 'rd-med' : 'rd-high';
+      return `<div class="profile-row">
+        <span class="profile-id">${p.id}</span>
+        <span class="profile-name">${p.name} — <span style="color:var(--muted);font-size:10px">${p.description}</span></span>
+        <div class="risk-dot ${rdClass}" title="Rischio ${p.riskLevel}"></div>
+      </div>`;
+    }).join('');
+
+    return `<div class="app-card">
+      <div class="app-head">
+        <div class="app-logo" style="background:${color}">${app.name.substring(0,3)}</div>
+        <div>
+          <div class="app-name">${app.name}</div>
+          <div class="app-full">${app.displayName.split('—')[1]?.trim() || app.displayName}</div>
+        </div>
+        <div class="app-badges">${rgPill}${ssoPill}</div>
+      </div>
+      <div class="app-body">
+        <div class="profiles-lbl">Profili disponibili (${app.availableProfiles.length})</div>
+        <div class="profile-list">${profiles}</div>
+        <div class="users-assigned" style="margin-top:8px">Utenti con accesso: <strong>${usersN}</strong></div>
+      </div>
+      <div class="app-footer">
+        <div>
+          <div class="owner-lbl">Owner team</div>
+          <div class="owner-val">${app.ownerTeam}</div>
+        </div>
+        <button class="enable-btn" onclick="abilitaDallaCatalogo('${app.name}')">+ Abilita utente ↗</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function abilitaDallaCatalogo(appName) {
+  const upn = prompt(`UPN dell'utente da abilitare su ${appName}:`);
+  if (!upn) return;
+  sessionStorage.setItem('chat_prefill', `Abilita ${upn} su ${appName}`);
+  window.location.href = '/';
+}
+
+load();
+setInterval(load, 15000);
+</script>
+</body>
+</html>

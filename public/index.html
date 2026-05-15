@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Agentic IAM v3.0 — Chat</title>
+<style>
+:root{--p:#3D0070;--pm:#7B00D4;--pl:#f3e8ff;--t:#0D6E8A;--tl:#e0f2f7;--g:#1A7A4A;--gl:#d1fae5;--r:#B91C1C;--rl:#fee2e2;--o:#E8720C;--ol:#fff3e0;--am:#92400E;--al:#fef3c7;--gray:#f5f5f7;--border:#e0e0e0;--text:#1a1a1a;--muted:#666}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f0f5;color:var(--text)}
+.app{display:grid;grid-template-columns:280px 1fr 320px;grid-template-rows:54px 1fr;height:100vh}
+header{grid-column:1/-1;background:linear-gradient(90deg,var(--p) 0%,var(--pm) 100%);color:white;display:flex;align-items:center;padding:0 18px;gap:14px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+header h1{font-size:14px;font-weight:600;letter-spacing:.2px}
+.nav-links{margin-left:auto;display:flex;gap:3px}
+.nav-link{color:rgba(255,255,255,.75);text-decoration:none;padding:5px 11px;border-radius:6px;font-size:11px;transition:background .15s;font-weight:500}
+.nav-link:hover,.nav-link.active{background:rgba(255,255,255,.22);color:white}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;animation:blink 2s infinite;margin-left:6px;box-shadow:0 0 8px #4ade80}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.sidebar-left{background:white;border-right:1px solid var(--border);overflow-y:auto}
+.sb-section{padding:10px 12px;border-bottom:1px solid var(--border)}
+.sb-section h3{font-size:10px;text-transform:uppercase;color:#888;letter-spacing:.6px;margin-bottom:7px;display:flex;align-items:center;gap:5px}
+.scenario-group{margin-bottom:9px}
+.scenario-group-title{font-size:9px;text-transform:uppercase;color:var(--pm);font-weight:700;letter-spacing:.5px;padding:5px 4px 3px;display:flex;align-items:center;gap:4px}
+.quick-btn{display:block;width:100%;text-align:left;background:var(--pl);border:1px solid #d8b4fe;color:var(--p);padding:7px 9px;border-radius:6px;margin-bottom:4px;cursor:pointer;font-size:11px;transition:transform .1s,background .15s;line-height:1.35}
+.quick-btn:hover{background:#e9d5ff;transform:translateX(2px)}
+.quick-btn.danger{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
+.quick-btn.danger:hover{background:#fee2e2}
+.user-card{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;transition:background .1s;margin-bottom:2px}
+.user-card:hover{background:var(--gray)}
+.udot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.udot-ok{background:var(--g)}.udot-dis{background:var(--r)}.udot-risk{background:var(--o)}
+.uname{font-size:11px;font-weight:500}.udept{font-size:10px;color:#888}
+.main{display:flex;flex-direction:column;overflow:hidden}
+.chat-msgs{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:14px;background:#fafafc}
+.msg{max-width:90%}
+.msg-user{align-self:flex-end}
+.msg-sys{align-self:flex-start;max-width:96%}
+.msg-bubble{padding:11px 15px;border-radius:13px;font-size:13px;line-height:1.55}
+.msg-user .msg-bubble{background:var(--pm);color:white;border-bottom-right-radius:3px;box-shadow:0 2px 8px rgba(123,0,212,.18)}
+.msg-sys .msg-bubble{background:white;border:1px solid var(--border);border-bottom-left-radius:3px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.msg-label{font-size:10px;color:#888;margin-bottom:3px;font-weight:500}
+.msg-user .msg-label{text-align:right}
+
+/* WELCOME */
+.welcome{background:linear-gradient(135deg,#f3e8ff 0%,#ffffff 100%);border:1px solid #d8b4fe;border-radius:12px;padding:18px;font-size:13px;line-height:1.6}
+.welcome h2{font-size:15px;color:var(--p);margin-bottom:8px}
+.welcome-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.welcome-feature{background:white;padding:9px 11px;border-radius:8px;border:1px solid #ede9fe}
+.welcome-feature-title{font-size:11px;font-weight:600;color:var(--pm);margin-bottom:3px}
+.welcome-feature-desc{font-size:11px;color:#666;line-height:1.45}
+
+/* STAGE CARDS */
+.stage-card{background:white;border:1px solid var(--border);border-radius:10px;padding:12px;margin-top:8px;font-size:12px}
+.stage-hdr{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-weight:600;font-size:12px}
+.stage-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.ctx-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:7px 0}
+.ctx-item{background:var(--gray);padding:7px;border-radius:6px}
+.ctx-label{font-size:10px;color:#888}.ctx-value{font-size:12px;font-weight:600;margin-top:2px}
+.root-cause{border-left:3px solid;padding:6px 9px;border-radius:0 6px 6px 0;margin-bottom:5px;font-size:11px}
+.rc-HIGH,.rc-CRITICAL{background:var(--rl);border-color:var(--r)}
+.rc-MEDIUM{background:var(--ol);border-color:var(--o)}
+.rc-INFO,.rc-LOW{background:var(--tl);border-color:var(--t)}
+.reasoning-box{background:#f9f5ff;border-left:3px solid var(--pm);padding:8px 11px;border-radius:0 7px 7px 0;font-size:11px;color:#555;margin-bottom:7px;font-style:italic;line-height:1.5}
+.warn-box{background:var(--ol);border-left:3px solid var(--o);padding:7px 11px;font-size:11px;margin-bottom:7px;border-radius:0 7px 7px 0}
+
+/* DETAILS RENDERER */
+.details-card{background:white;border:1px solid var(--border);border-radius:10px;padding:12px;margin-top:8px}
+.details-title{font-weight:600;font-size:13px;color:var(--p);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.section{margin-bottom:14px}
+.section:last-child{margin-bottom:0}
+.section-heading{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#666;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.section-meta{font-size:10px;color:#888;font-style:italic;margin-top:4px}
+.badges-row{display:flex;flex-wrap:wrap;gap:5px}
+.badge-app{background:var(--pl);color:var(--p);padding:3px 8px;border-radius:10px;font-size:11px;font-weight:600;border:1px solid #ddd6fe}
+.badge-app.ok{background:var(--gl);color:var(--g);border-color:#a7f3d0}
+.steps-list{counter-reset:step;list-style:none}
+.steps-list li{position:relative;padding:6px 0 6px 32px;font-size:12px;color:#444;line-height:1.5}
+.steps-list li::before{counter-increment:step;content:counter(step);position:absolute;left:0;top:6px;width:22px;height:22px;background:var(--pm);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
+.steps-list.warn li::before{background:var(--o)}
+.bullet-list{list-style:none}
+.bullet-list li{padding:4px 0 4px 20px;position:relative;font-size:12px;color:#444;line-height:1.5}
+.bullet-list li::before{content:'•';position:absolute;left:6px;color:var(--pm);font-weight:700}
+.bullet-list.ok li::before{color:var(--g)}
+.bullet-list.warn li::before{color:var(--o)}
+.kv-grid{display:grid;grid-template-columns:max-content 1fr;gap:5px 14px;font-size:12px}
+.kv-k{color:#666;font-weight:500}
+.kv-v{font-weight:600}
+.kv-v.danger{color:var(--r)}
+.kv-v.warn{color:var(--o)}
+.kv-v.ok{color:var(--g)}
+.text-block{font-size:12px;color:#444;line-height:1.5;padding:6px 0}
+.text-block.warn{background:var(--ol);padding:8px 11px;border-radius:7px;border-left:3px solid var(--o);color:var(--am)}
+
+/* TICKETS */
+.ticket-row{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:8px;background:var(--gray);border-radius:7px;margin-bottom:5px;font-size:11px;border-left:3px solid var(--border)}
+.ticket-row.over_sla{border-left-color:var(--r);background:var(--rl)}
+.ticket-row.near_sla{border-left-color:var(--o);background:var(--ol)}
+.ticket-id{font-weight:700;color:var(--p);font-family:monospace;font-size:11px}
+.ticket-body{line-height:1.4}
+.ticket-type{font-weight:600;color:#333}
+.ticket-meta{color:#666;font-size:10px;margin-top:2px}
+.ticket-sla{font-size:10px;font-weight:700;text-align:right;white-space:nowrap}
+.ticket-sla.over_sla{color:var(--r)}
+.ticket-sla.near_sla{color:var(--o)}
+.ticket-sla.in_sla{color:var(--g)}
+
+/* FIREWALL BLOCK CARD */
+.firewall-block{background:linear-gradient(135deg,#fee2e2 0%,#fff 100%);border:2px solid var(--r);border-radius:12px;padding:14px;animation:fwShake .5s ease}
+@keyframes fwShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.firewall-block-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.firewall-icon{width:36px;height:36px;background:var(--r);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;animation:fwPulse 1.5s infinite}
+@keyframes fwPulse{0%,100%{box-shadow:0 0 0 0 rgba(185,28,28,.5)}50%{box-shadow:0 0 0 10px rgba(185,28,28,0)}}
+.firewall-title{font-weight:700;color:var(--r);font-size:14px}
+.firewall-sub{font-size:11px;color:#666;margin-top:1px}
+.firewall-reason{background:white;border:1px solid #fca5a5;border-radius:8px;padding:9px 11px;font-size:12px;color:#7f1d1d;margin-bottom:8px}
+.firewall-action{font-size:11px;color:#666;font-style:italic;display:flex;align-items:center;gap:5px}
+
+/* TIMELINE */
+.timeline{display:flex;flex-direction:column;gap:0;margin:8px 0}
+.tl-step{display:flex;align-items:flex-start;gap:10px;padding:7px 0;position:relative}
+.tl-step:not(:last-child)::after{content:'';position:absolute;left:11px;top:30px;width:2px;height:calc(100% - 14px);background:var(--border)}
+.tl-circle{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;z-index:1;transition:all .4s}
+.tl-pending{background:#f0f0f0;color:#aaa;border:2px solid #ddd}
+.tl-executing{background:var(--tl);color:var(--t);border:2px solid var(--t);animation:pring 1s infinite}
+.tl-completed{background:var(--gl);color:var(--g);border:2px solid var(--g)}
+.tl-failed{background:var(--rl);color:var(--r);border:2px solid var(--r)}
+.tl-awaiting{background:var(--ol);color:var(--o);border:2px solid var(--o);animation:pring 1s infinite}
+.tl-rejected{background:var(--rl);color:var(--r);border:2px solid var(--r)}
+@keyframes pring{0%,100%{box-shadow:0 0 0 0 rgba(13,110,138,.3)}50%{box-shadow:0 0 0 5px rgba(13,110,138,.1)}}
+.tl-label{font-size:12px;font-weight:500}
+.tl-detail{font-size:11px;color:#888;margin-top:2px}
+.tl-badges{display:flex;gap:4px;margin-top:3px;flex-wrap:wrap}
+.badge{font-size:10px;font-weight:600;padding:1px 7px;border-radius:9px}
+.badge-LOW{background:var(--gl);color:var(--g)}
+.badge-MEDIUM{background:var(--al);color:var(--am)}
+.badge-HIGH,.badge-CRITICAL{background:var(--rl);color:var(--r)}
+.badge-conf{background:var(--ol);color:var(--o)}
+.exec-progress{margin:10px 0 5px}
+.progress-bar-bg{background:#f0f0f0;border-radius:4px;height:6px;overflow:hidden}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--pm),var(--p));border-radius:4px;transition:width .5s}
+.progress-text{font-size:11px;color:#666;margin-top:4px;font-weight:500}
+.execute-btn{margin-top:11px;background:var(--pm);color:white;border:none;padding:9px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;width:100%;transition:transform .1s,background .15s}
+.execute-btn:hover:not(:disabled){background:var(--p);transform:translateY(-1px)}
+.execute-btn:disabled{background:#aaa;cursor:not-allowed}
+
+/* PASSWORD CARD */
+.password-card{background:linear-gradient(135deg,#fef3c7 0%,#fff 100%);border:2px solid var(--o);border-radius:11px;padding:13px;margin-top:10px;animation:pwSlide .4s ease}
+@keyframes pwSlide{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.password-card-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.password-icon{width:34px;height:34px;background:var(--o);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.password-title{font-weight:700;color:var(--am);font-size:13px}
+.password-sub{font-size:11px;color:#666;margin-top:1px}
+.password-value-wrap{display:flex;align-items:center;gap:8px;background:#1a1a1a;border-radius:8px;padding:11px 13px;margin:10px 0}
+.password-value{font-family:'Courier New',monospace;color:#fde047;font-size:17px;font-weight:700;letter-spacing:2px;flex:1;user-select:all}
+.password-copy-btn{background:var(--g);color:white;border:none;padding:7px 14px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;transition:background .15s}
+.password-copy-btn:hover{background:#16653a}
+.password-warning{background:white;border-left:3px solid var(--o);padding:8px 11px;font-size:11px;color:var(--am);border-radius:0 7px 7px 0;line-height:1.5}
+.password-warning strong{color:#7c2d12}
+.password-meta{display:flex;gap:14px;font-size:11px;color:#666;margin-top:8px;flex-wrap:wrap}
+.password-meta-item{display:flex;align-items:center;gap:5px}
+
+/* EMAIL */
+.email-draft{background:#f0f7ff;border:1px solid #b3d4f5;border-radius:9px;padding:11px;margin-top:9px}
+.email-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.email-title{font-size:11px;font-weight:600;color:#185FA5}
+.email-copy-btn{background:#185FA5;color:white;border:none;padding:3px 10px;border-radius:5px;font-size:10px;cursor:pointer}
+.email-field{font-size:11px;margin-bottom:3px}.email-field span{color:#888;margin-right:4px}
+.email-body{font-size:10px;color:#444;white-space:pre-wrap;background:white;border:1px solid #dde;padding:8px;border-radius:5px;margin-top:5px;max-height:160px;overflow-y:auto;font-family:monospace;line-height:1.45}
+
+/* INPUT */
+.chat-input{padding:13px;background:white;border-top:1px solid var(--border);display:flex;gap:9px}
+.chat-input textarea{flex:1;border:1px solid var(--border);border-radius:9px;padding:9px 12px;font-size:13px;resize:none;font-family:inherit}
+.chat-input textarea:focus{outline:none;border-color:var(--pm);box-shadow:0 0 0 2px rgba(123,0,212,.1)}
+.send-btn{background:var(--pm);color:white;border:none;padding:9px 18px;border-radius:9px;cursor:pointer;font-weight:600;font-size:13px;transition:background .15s}
+.send-btn:hover{background:var(--p)}
+
+/* RIGHT SIDEBAR */
+.sidebar-right{background:white;border-left:1px solid var(--border);overflow-y:auto}
+.panel-tab{display:flex;border-bottom:1px solid var(--border);background:var(--gray)}
+.tab-btn{flex:1;padding:9px 4px;font-size:10px;border:none;background:none;cursor:pointer;color:#888;border-bottom:2px solid transparent;font-weight:500}
+.tab-btn.active{color:var(--pm);border-bottom-color:var(--pm);font-weight:600;background:white}
+.tab-content{display:none;padding:11px}
+.tab-content.active{display:block}
+.audit-entry{font-size:11px;padding:7px;border-bottom:1px solid var(--border)}
+.audit-action{font-weight:600;color:var(--p)}
+.audit-time{color:#888;font-size:10px}
+.audit-ok{color:var(--g);font-size:10px}.audit-fail{color:var(--r);font-size:10px}
+.nhi-card{padding:9px;border:1px solid var(--border);border-radius:7px;margin-bottom:6px}
+.nhi-name{font-weight:600;font-size:11px}
+.risk-pill{display:inline-block;font-size:9px;font-weight:700;padding:1px 7px;border-radius:9px;margin-top:3px}
+.risk-HIGH{background:var(--rl);color:var(--r)}.risk-MEDIUM{background:var(--al);color:var(--am)}.risk-LOW{background:var(--gl);color:var(--g)}
+.conf-list-item{background:var(--ol);border:1px solid var(--o);border-radius:8px;padding:11px;margin-bottom:7px}
+.conf-title{color:var(--am);font-weight:700;font-size:12px;margin-bottom:6px}
+.conf-actions{display:flex;gap:7px;margin-top:9px}
+.btn-approva{background:var(--g);color:white;border:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-weight:600;font-size:11px;flex:1}
+.btn-rifiuta{background:var(--r);color:white;border:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-weight:600;font-size:11px;flex:1}
+
+/* POPUP */
+.notifica-popup{position:fixed;top:70px;right:18px;width:340px;z-index:9999;background:white;border:2px solid var(--o);border-radius:12px;padding:15px;box-shadow:0 6px 24px rgba(0,0,0,.18);animation:slideIn .35s ease}
+@keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+.popup-dot{width:9px;height:9px;border-radius:50%;background:var(--o);animation:blink 1s infinite}
+.thinking{display:flex;align-items:center;gap:8px;color:#888;font-size:12px;padding:9px 0}
+.dp{display:flex;gap:3px}
+.dp span{width:6px;height:6px;background:var(--pm);border-radius:50%;animation:dp .9s infinite}
+.dp span:nth-child(2){animation-delay:.2s}.dp span:nth-child(3){animation-delay:.4s}
+@keyframes dp{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div style="font-size:18px">🛡️</div>
+  <h1>Agentic IAM v3.0 — Copilota Operativo</h1>
+  <div class="nav-links">
+    <a href="/" class="nav-link active">Chat</a>
+    <a href="/dashboard.html" class="nav-link">Dashboard</a>
+    <a href="/tickets.html" class="nav-link">Ticket</a>
+    <a href="/sla.html" class="nav-link">SLA</a>
+    <a href="/apps.html" class="nav-link">Catalogo</a>
+  </div>
+  <div class="live-dot" id="status-dot" title="Sistema operativo"></div>
+</header>
+
+<div class="sidebar-left">
+  <div class="sb-section">
+    <h3>⚡ Scenari guidati</h3>
+
+    <div class="scenario-group">
+      <div class="scenario-group-title">🔧 Troubleshooting</div>
+      <button class="quick-btn" onclick="invia('Mario Rossi non riesce ad accedere a SAP ERP')">🔒 Login bloccato — Mario Rossi</button>
+      <button class="quick-btn" onclick="invia('Anna Ricci login sospetto fuori orario')">⚠️ Anomalia — Admin notturno</button>
+      <button class="quick-btn" onclick="invia('Verifica profilo Mario Rossi su ERPCORE')">🔍 Verifica profilo app</button>
+    </div>
+
+    <div class="scenario-group">
+      <div class="scenario-group-title">🔄 Lifecycle</div>
+      <button class="quick-btn" onclick="invia('Luca Ferrari lascia l\'azienda oggi')">🚪 Leaver — Luca Ferrari</button>
+      <button class="quick-btn" onclick="invia('Reset password Paolo Bruno')">🔑 Reset password — Paolo Bruno</button>
+      <button class="quick-btn" onclick="invia('Crea utenza cloud-only per nuovo.collaboratore@demo.local')">➕ Creazione utenza</button>
+    </div>
+
+    <div class="scenario-group">
+      <div class="scenario-group-title">📱 App enablement</div>
+      <button class="quick-btn" onclick="invia('Abilita Roberto Galli su ERPCORE Standard')">✅ Abilitazione ERPCORE</button>
+      <button class="quick-btn" onclick="invia('Abilita Roberto Galli su QUALITY Operator')">✅ Abilitazione QUALITY (no RA)</button>
+    </div>
+
+    <div class="scenario-group">
+      <div class="scenario-group-title">⚖️ Compliance & sicurezza</div>
+      <button class="quick-btn" onclick="invia('Analisi SoD su tutti gli utenti')">📊 SoD scan completo</button>
+      <button class="quick-btn" onclick="invia('Audit delle NHI e service principal')">🤖 Audit NHI</button>
+      <button class="quick-btn" onclick="invia('Mostra ticket DL aperti')">📂 Ticket in coda</button>
+    </div>
+
+    <div class="scenario-group">
+      <div class="scenario-group-title">📋 Guida & redirect</div>
+      <button class="quick-btn" onclick="invia('Quando serve autorizzazione del Responsabile Applicativo?')">📋 Guida autorizzazione RA</button>
+      <button class="quick-btn" onclick="invia('Cosa gestisce il Team IAM?')">🎯 Scope Team IAM</button>
+      <button class="quick-btn" onclick="invia('Richiesta PIM per Luca Ferrari Exchange Admin')">🔄 PIM redirect</button>
+    </div>
+  </div>
+
+  <div class="sb-section">
+    <h3>👥 Utenti nel sistema</h3>
+    <div id="user-list"><p style="color:#888;font-size:11px;padding:4px">Caricamento...</p></div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="chat-msgs" id="chat-msgs">
+    <div class="msg msg-sys">
+      <div class="msg-label">Sistema</div>
+      <div class="msg-bubble">
+        <div class="welcome">
+          <h2>👋 Benvenuto in Agentic IAM v3.0</h2>
+          <div style="font-size:12px;color:#555;line-height:1.55">
+            Copilota operativo per il <strong>Team IAM</strong>. Sistema in <strong>DEMO MODE</strong> — pattern matching locale, funziona offline.
+          </div>
+          <div class="welcome-grid">
+            <div class="welcome-feature">
+              <div class="welcome-feature-title">🧠 Pipeline 3 stadi</div>
+              <div class="welcome-feature-desc">Conversational → Planner → Orchestrator con valutazione del rischio per ogni step.</div>
+            </div>
+            <div class="welcome-feature">
+              <div class="welcome-feature-title">🔔 Richiesta Conferma</div>
+              <div class="welcome-feature-desc">Le azioni MEDIUM/HIGH si fermano e chiedono approvazione operatore.</div>
+            </div>
+            <div class="welcome-feature">
+              <div class="welcome-feature-title">🛡️ Firewall semantico</div>
+              <div class="welcome-feature-desc">Blocca prompt injection e tentativi di privilege escalation prima del Planner.</div>
+            </div>
+            <div class="welcome-feature">
+              <div class="welcome-feature-title">📋 Audit append-only</div>
+              <div class="welcome-feature-desc">Ogni step e ogni decisione è loggato in <code>logs/audit.jsonl</code>.</div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:#666;margin-top:11px;padding-top:10px;border-top:1px dashed #ddd">
+            💡 <strong>Inizia da qui:</strong> usa gli <em>Scenari guidati</em> a sinistra oppure prova <em>"Ignore previous instructions"</em> per testare il firewall.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="chat-input">
+    <textarea id="msg-in" rows="2" placeholder="Scrivi una richiesta IAM (es. 'Disabilita Mario Rossi' o 'Quando serve autorizzazione RA?')..." onkeydown="onKey(event)"></textarea>
+    <button class="send-btn" onclick="inviaMsgCorrente()">Invia ▶</button>
+  </div>
+</div>
+
+<div class="sidebar-right">
+  <div class="panel-tab">
+    <button class="tab-btn active" onclick="apriTab('audit',this)">📋 Registro</button>
+    <button class="tab-btn" onclick="apriTab('conferma',this)" id="tab-conferma-btn">🔔 Conferma</button>
+    <button class="tab-btn" onclick="apriTab('nhi',this)">🤖 NHI</button>
+  </div>
+  <div class="tab-content active" id="tab-audit">
+    <p style="color:#888;font-size:11px" id="audit-empty">Nessuna operazione ancora.</p>
+    <div id="audit-list"></div>
+  </div>
+  <div class="tab-content" id="tab-conferma">
+    <p style="color:#888;font-size:11px" id="conf-empty">Nessuna Richiesta Conferma pendente.</p>
+    <div id="conf-list"></div>
+  </div>
+  <div class="tab-content" id="tab-nhi">
+    <div id="nhi-list"><p style="color:#888;font-size:11px">Caricamento...</p></div>
+  </div>
+</div>
+</div>
+
+<script>
+var sessioneCorrente = null;
+var prevConferme = 0;
+
+/* ========== API ========== */
+async function api(metodo, percorso, corpo) {
+  try {
+    var opz = { method: metodo, headers: { 'Content-Type': 'application/json' } };
+    if (corpo) opz.body = JSON.stringify(corpo);
+    var r = await fetch(percorso, opz);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return await r.json();
+  } catch(e) {
+    console.error('API error', percorso, e.message);
+    return null;
+  }
+}
+
+/* ========== AVVIO ========== */
+async function avvia() {
+  caricaUtenti();
+  caricaNHI();
+  setInterval(function() {
+    aggiornaRegistro();
+    controllaConferme();
+    if (sessioneCorrente) aggiornaEsecuzione();
+  }, 1500);
+}
+
+/* ========== CHAT ========== */
+function invia(testo) {
+  document.getElementById('msg-in').value = testo;
+  inviaMsgCorrente();
+}
+
+async function inviaMsgCorrente() {
+  var campo = document.getElementById('msg-in');
+  var testo = campo.value.trim();
+  if (!testo) return;
+  campo.value = '';
+  aggiungiMsgUtente(testo);
+  var thinking = aggiungiThinking();
+  var risposta = await api('POST', '/api/chat', { message: testo });
+  thinking.remove();
+  if (!risposta) { aggiungiMsgSistema('Errore di connessione.'); return; }
+  if (risposta.error) { aggiungiMsgSistema('Errore: ' + risposta.error); return; }
+
+  if (risposta.stage === 'bloccato' || risposta.stage === 'blocked') {
+    mostraBloccoFirewall(risposta);
+    return;
+  }
+  if (risposta.stage === 'pianificato' || risposta.stage === 'planned') {
+    sessioneCorrente = risposta.sessionId;
+    mostraPiano(risposta);
+    return;
+  }
+  aggiungiMsgSistema('Risposta: ' + risposta.stage);
+}
+
+function onKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); inviaMsgCorrente(); }
+}
+
+/* ========== FIREWALL BLOCK ========== */
+function mostraBloccoFirewall(dati) {
+  var reason = (dati.structured && dati.structured.block_reason) || dati.message || 'Richiesta non autorizzata';
+  var chat = document.getElementById('chat-msgs');
+  var div = document.createElement('div');
+  div.className = 'msg msg-sys';
+  div.innerHTML = '<div class="msg-label">🛡️ Firewall di Sicurezza</div><div class="msg-bubble">' +
+    '<div class="firewall-block">' +
+      '<div class="firewall-block-hdr">' +
+        '<div class="firewall-icon">🔒</div>' +
+        '<div><div class="firewall-title">Richiesta BLOCCATA</div>' +
+        '<div class="firewall-sub">Il firewall semantico ha intercettato un pattern sospetto prima del Planner</div></div>' +
+      '</div>' +
+      '<div class="firewall-reason"><strong>Motivo:</strong> ' + reason + '</div>' +
+      '<div class="firewall-action">📋 Evento loggato su <code>logs/audit.jsonl</code> per audit forense · Nessuna azione eseguita.</div>' +
+    '</div></div>';
+  chat.appendChild(div);
+  chat.scrollTop = 99999;
+}
+
+/* ========== RENDER PIANO ========== */
+function mostraPiano(dati) {
+  var str = dati.structured;
+  var piano = dati.plan;
+  var sid = dati.sessionId;
+  var chat = document.getElementById('chat-msgs');
+  var div = document.createElement('div');
+  div.className = 'msg msg-sys';
+  div.id = 'sessione-' + sid;
+
+  var html = '<div class="msg-label">🤖 Copilota IAM</div><div class="msg-bubble">';
+  var conf = Math.round((str.confidence || 0) * 100);
+
+  /* CONVERSATIONAL — Analisi richiesta */
+  html += '<div class="stage-card"><div class="stage-hdr"><div class="stage-icon" style="background:#f3e8ff">🧠</div>Analisi richiesta <span style="font-size:10px;color:#888;margin-left:auto;font-weight:400">' + conf + '% confidence' + (str._mode === 'demo' ? ' · DEMO' : ' · LIVE') + '</span></div>';
+  html += '<div style="font-size:12px;color:#444"><strong>Intent:</strong> ' + (str.intent || 'unknown') + '</div>';
+  html += '<div style="font-size:11px;color:#666;margin-top:3px">' + (str.summary || '—') + '</div></div>';
+
+  if (piano.reasoning) html += '<div class="reasoning-box">💭 ' + piano.reasoning + '</div>';
+  if (piano.warning)   html += '<div class="warn-box">⚠ ' + piano.warning + '</div>';
+
+  /* USER CARD */
+  var u = piano.target_user;
+  if (u) {
+    var cs = u.accountEnabled ? 'var(--g)' : 'var(--r)';
+    var cm = u.mfaRegistered  ? 'var(--g)' : 'var(--o)';
+    html += '<div class="stage-card"><div class="stage-hdr"><div class="stage-icon" style="background:#e0f2f7">👤</div>Dati utente recuperati</div>';
+    html += '<strong style="font-size:13px;display:block;margin-bottom:4px">' + u.displayName + '</strong>';
+    html += '<div style="font-size:11px;color:#666">' + (u.jobTitle || '') + ' · ' + (u.department || '') + ' · ' + (u.userPrincipalName || '') + '</div>';
+    html += '<div class="ctx-grid">';
+    html += '<div class="ctx-item"><div class="ctx-label">Account</div><div class="ctx-value" style="color:' + cs + '">' + (u.accountEnabled ? '✓ Attivo' : '✗ Disabilitato') + '</div></div>';
+    html += '<div class="ctx-item"><div class="ctx-label">MFA</div><div class="ctx-value" style="color:' + cm + '">' + (u.mfaRegistered ? '✓ Registrato' : '✗ Mancante') + '</div></div>';
+    html += '<div class="ctx-item"><div class="ctx-label">Rischio</div><div class="ctx-value">' + (u.riskLevel || 'none') + '</div></div>';
+    html += '<div class="ctx-item"><div class="ctx-label">App assegnate</div><div class="ctx-value">' + ((u.appAssignments || []).length) + '</div></div>';
+    html += '</div></div>';
+  }
+
+  /* ROOT CAUSES */
+  var rc = piano.rootCauses || [];
+  if (rc.length) {
+    html += '<div class="stage-card"><div class="stage-hdr"><div class="stage-icon" style="background:#fee2e2">🔍</div>Cause identificate</div>';
+    for (var i = 0; i < rc.length; i++) {
+      html += '<div class="root-cause rc-' + (rc[i].severity || 'MEDIUM') + '"><strong>' + (rc[i].severity || 'MEDIUM') + '</strong> · ' + rc[i].description + '</div>';
+    }
+    html += '</div>';
+  }
+
+  /* TIMELINE */
+  var steps = piano.steps || [];
+  if (steps.length) {
+    var nAuto = 0, nConf = 0;
+    for (var j = 0; j < steps.length; j++) {
+      if (steps[j].requires_validation) nConf++; else nAuto++;
+    }
+    html += '<div class="stage-card"><div class="stage-hdr"><div class="stage-icon" style="background:#f3e8ff">▶</div>Piano operativo · ' + nAuto + ' auto / ' + nConf + ' richiede conferma</div>';
+    html += '<div class="exec-progress"><div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-' + sid + '" style="width:0%"></div></div>';
+    html += '<div class="progress-text" id="prog-txt-' + sid + '">In attesa di avvio...</div></div>';
+    html += '<div class="timeline" id="timeline-' + sid + '">';
+    for (var k = 0; k < steps.length; k++) {
+      var s = steps[k];
+      var bR = '<span class="badge badge-' + (s.risk || 'MEDIUM') + '">' + (s.risk || 'MEDIUM') + '</span>';
+      var bC = s.requires_validation ? '<span class="badge badge-conf">🔔 Conferma</span>' : '';
+      var bRb = s.rollback_available ? '<span class="badge" style="background:#e0f2f7;color:var(--t)">↩ Rollback</span>' : '';
+      html += '<div class="tl-step"><div class="tl-circle tl-pending" id="tl-cerchio-' + sid + '-' + k + '">' + (k+1) + '</div>';
+      html += '<div style="flex:1"><div class="tl-label">' + s.label + '</div><div class="tl-badges">' + bR + bC + bRb + '</div>';
+      html += '<div class="tl-detail" id="tl-det-' + sid + '-' + k + '">In attesa</div></div></div>';
+    }
+    html += '</div><button class="execute-btn" id="exec-btn-' + sid + '" onclick="avviaEsecuzione(\'' + sid + '\')">▶ Avvia esecuzione</button></div>';
+  }
+
+  /* DETAILS (process_guidance, ticket_review, ecc.) */
+  if (piano.details) {
+    html += renderDetails(piano.details);
+  }
+
+  /* SUMMARY FALLBACK (intent senza steps né details) */
+  if (!steps.length && !piano.details && piano.summary) {
+    html += '<div style="background:#f0f7ff;border-left:3px solid var(--t);padding:11px 14px;border-radius:0 8px 8px 0;font-size:12px;margin-top:8px;white-space:pre-wrap;line-height:1.55">' + piano.summary + '</div>';
+  }
+
+  html += '</div>';
+  div.innerHTML = html;
+  chat.appendChild(div);
+  chat.scrollTop = 99999;
+}
+
+/* ========== RENDER DETAILS (sezioni strutturate) ========== */
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) {
+    return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+  });
+}
+
+function renderDetails(d) {
+  var html = '<div class="details-card">';
+  html += '<div class="details-title">📖 ' + escapeHtml(d.title) + '</div>';
+  for (var i = 0; i < (d.sections || []).length; i++) {
+    var s = d.sections[i];
+    html += '<div class="section">';
+    html += '<div class="section-heading">' + escapeHtml(s.heading) + '</div>';
+
+    if (s.kind === 'badges') {
+      html += '<div class="badges-row">';
+      for (var b = 0; b < (s.items || []).length; b++) {
+        html += '<span class="badge-app' + (s.variant === 'ok' ? ' ok' : '') + '">' + escapeHtml(s.items[b]) + '</span>';
+      }
+      html += '</div>';
+    }
+    else if (s.kind === 'steps') {
+      html += '<ol class="steps-list' + (s.variant === 'warn' ? ' warn' : '') + '">';
+      for (var st = 0; st < (s.items || []).length; st++) {
+        html += '<li>' + escapeHtml(s.items[st]).replace(/^\d+\.\s*/, '') + '</li>';
+      }
+      html += '</ol>';
+    }
+    else if (s.kind === 'list') {
+      html += '<ul class="bullet-list ' + (s.variant || '') + '">';
+      for (var l = 0; l < (s.items || []).length; l++) {
+        html += '<li>' + escapeHtml(s.items[l]) + '</li>';
+      }
+      html += '</ul>';
+      if (s.meta) html += '<div class="section-meta">→ ' + escapeHtml(s.meta) + '</div>';
+    }
+    else if (s.kind === 'kv') {
+      html += '<div class="kv-grid">';
+      for (var kv = 0; kv < (s.items || []).length; kv++) {
+        var it = s.items[kv];
+        var cls = it.variant ? (' ' + it.variant) : '';
+        html += '<div class="kv-k">' + escapeHtml(it.k) + '</div><div class="kv-v' + cls + '">' + escapeHtml(it.v) + '</div>';
+      }
+      html += '</div>';
+    }
+    else if (s.kind === 'text') {
+      for (var t = 0; t < (s.items || []).length; t++) {
+        html += '<div class="text-block' + (s.variant === 'warn' ? ' warn' : '') + '">' + escapeHtml(s.items[t]) + '</div>';
+      }
+    }
+    else if (s.kind === 'tickets') {
+      for (var tk = 0; tk < (s.items || []).length; tk++) {
+        var it2 = s.items[tk];
+        var slaTxt = it2.hoursLeft === null ? '—' :
+          (it2.hoursLeft < 0 ? 'Scaduto ' + Math.abs(it2.hoursLeft) + 'h fa' :
+           it2.hoursLeft < 4 ? 'In scadenza tra ' + it2.hoursLeft + 'h' :
+                                'OK · ' + it2.hoursLeft + 'h');
+        html += '<div class="ticket-row ' + it2.slaStatus + '">' +
+          '<div class="ticket-id">' + escapeHtml(it2.id) + '</div>' +
+          '<div class="ticket-body">' +
+            '<div class="ticket-type">' + escapeHtml(it2.type) + ' → <strong>' + escapeHtml(it2.target) + '</strong></div>' +
+            '<div class="ticket-meta">richiesto da ' + escapeHtml(it2.requestor) + ' · ' + escapeHtml(it2.note) + '</div>' +
+          '</div>' +
+          '<div class="ticket-sla ' + it2.slaStatus + '">' + slaTxt + '</div>' +
+        '</div>';
+      }
+    }
+
+    html += '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+/* ========== ESECUZIONE ========== */
+async function avviaEsecuzione(sid) {
+  var btn = document.getElementById('exec-btn-' + sid);
+  if (btn) { btn.disabled = true; btn.textContent = '⟳ Esecuzione in corso...'; }
+  await api('POST', '/api/execute/' + sid);
+}
+
+async function aggiornaEsecuzione() {
+  if (!sessioneCorrente) return;
+  var dati = await api('GET', '/api/session/' + sessioneCorrente);
+  if (!dati || !dati.execution) return;
+
+  var exec  = dati.execution;
+  var steps = exec.steps || [];
+  var total = steps.length || 1;
+  var fatti = 0;
+  for (var i = 0; i < steps.length; i++) {
+    var st = steps[i].status;
+    if (st === 'completato' || st === 'errore' || st === 'rifiutato' || st === 'scaduto') fatti++;
+  }
+  var pct = Math.round(fatti / total * 100);
+
+  var barEl = document.getElementById('prog-' + sessioneCorrente);
+  var txtEl = document.getElementById('prog-txt-' + sessioneCorrente);
+  if (barEl) barEl.style.width = pct + '%';
+  if (txtEl) txtEl.textContent = pct + '% completato (' + fatti + '/' + total + ' step)';
+
+  for (var j = 0; j < steps.length; j++) {
+    var step    = steps[j];
+    var cerchio = document.getElementById('tl-cerchio-' + sessioneCorrente + '-' + j);
+    var detEl   = document.getElementById('tl-det-' + sessioneCorrente + '-' + j);
+    if (!cerchio) continue;
+
+    var clsMap = {
+      completato:'tl-completed', errore:'tl-failed',
+      in_esecuzione:'tl-executing', in_attesa_validazione:'tl-awaiting',
+      rifiutato:'tl-rejected', scaduto:'tl-pending'
+    };
+    var iconMap = { completato:'✓', errore:'✗', rifiutato:'✗', in_attesa_validazione:'🔔', in_esecuzione:'⟳' };
+    var detMap = {
+      in_esecuzione: 'Esecuzione in corso...',
+      completato:    '✓ Completato' + (step.result && step.result.duration_ms ? ' (' + step.result.duration_ms + 'ms)' : ''),
+      errore:        '✗ Errore: ' + ((step.result && step.result.error) || ''),
+      in_attesa_validazione: '🔔 In attesa Richiesta Conferma...',
+      rifiutato:     '✗ Rifiutato: ' + (step.rejectionReason || ''),
+      scaduto:       'Scaduto'
+    };
+
+    cerchio.className = 'tl-circle ' + (clsMap[step.status] || 'tl-pending');
+    cerchio.textContent = iconMap[step.status] || (j + 1);
+    if (detEl) detEl.textContent = detMap[step.status] || ('In attesa');
+
+    // Password generata: rendering card una sola volta dopo il completamento
+    if (step.status === 'completato' && step.result && step.result.generated_password) {
+      mostraPasswordGenerata(sessioneCorrente, step);
+    }
+  }
+
+  var st_finali = ['completato','completato_con_errori','fermato_operatore','timeout','completed','completed_with_errors','stopped_by_operator'];
+  var finito = false;
+  for (var f = 0; f < st_finali.length; f++) { if (exec.status === st_finali[f]) { finito = true; break; } }
+
+  if (finito) {
+    var btn = document.getElementById('exec-btn-' + sessioneCorrente);
+    if (btn) {
+      var ok = exec.status === 'completato' || exec.status === 'completed';
+      btn.textContent = ok ? '✓ Completato con successo' : '⚠ ' + exec.status;
+      btn.style.background = ok ? 'var(--g)' : 'var(--o)';
+    }
+    if (exec.status === 'completato' || exec.status === 'completed') {
+      mostraBozzaEmail(sessioneCorrente, exec);
+    }
+    sessioneCorrente = null;
+  }
+}
+
+/* ========== PASSWORD GENERATA ========== */
+function mostraPasswordGenerata(sid, step) {
+  var divSess = document.getElementById('sessione-' + sid);
+  if (!divSess) return;
+  var bubble = divSess.querySelector('.msg-bubble');
+  if (!bubble) return;
+  // Una sola card per step (idempotente)
+  var cardId = 'pw-card-' + sid + '-' + step.stepIndex;
+  if (document.getElementById(cardId)) return;
+
+  var pw = step.result.generated_password;
+  var target = step.params && step.params.upn ? step.params.upn : (step.result.target || '—');
+  var expires = step.result.expires_at ? new Date(step.result.expires_at).toLocaleTimeString('it-IT') : '—';
+
+  var card = document.createElement('div');
+  card.className = 'password-card';
+  card.id = cardId;
+  card.innerHTML =
+    '<div class="password-card-hdr">' +
+      '<div class="password-icon">🔑</div>' +
+      '<div><div class="password-title">Password temporanea generata</div>' +
+      '<div class="password-sub">Utente: <strong>' + escapeHtml(target) + '</strong></div></div>' +
+    '</div>' +
+    '<div class="password-value-wrap">' +
+      '<div class="password-value" id="pwval-' + cardId + '">' + escapeHtml(pw) + '</div>' +
+      '<button class="password-copy-btn" onclick="copiaPassword(\'' + cardId + '\',this)">📋 Copia</button>' +
+    '</div>' +
+    '<div class="password-warning">' +
+      '<strong>⚠️ Visibile UNA SOLA VOLTA.</strong> ' +
+      'Comunicare all\'utente tramite canale sicuro (chiamata diretta, password manager aziendale). ' +
+      '<strong>Mai per email o chat in chiaro.</strong>' +
+    '</div>' +
+    '<div class="password-meta">' +
+      '<div class="password-meta-item">🔒 <span>' + step.result.password_length + ' caratteri · complessità OK</span></div>' +
+      '<div class="password-meta-item">⏰ <span>Scade alle ' + expires + '</span></div>' +
+      '<div class="password-meta-item">🔄 <span>Cambio obbligatorio al primo accesso</span></div>' +
+    '</div>';
+  bubble.appendChild(card);
+  document.getElementById('chat-msgs').scrollTop = 99999;
+}
+
+function copiaPassword(cardId, btn) {
+  var pwEl = document.getElementById('pwval-' + cardId);
+  if (!pwEl) return;
+  navigator.clipboard.writeText(pwEl.textContent).then(function() {
+    var orig = btn.textContent;
+    btn.textContent = '✓ Copiato!';
+    btn.style.background = '#16653a';
+    setTimeout(function() { btn.textContent = orig; btn.style.background = ''; }, 2000);
+  });
+}
+
+/* ========== EMAIL DRAFT ========== */
+async function mostraBozzaEmail(sid, exec) {
+  var intent = exec.plan && exec.plan.intent;
+  var target = exec.plan && exec.plan.target_user && exec.plan.target_user.userPrincipalName;
+  if (!intent || !target) return;
+  var mappa = { lifecycle_leaver:'leaver', app_enablement:'app_enablement', user_creation:'user_creation', password_reset:'password_reset', pim_redirect:'pim_redirect' };
+  var azione = mappa[intent];
+  if (!azione) return;
+  var risp = await api('POST', '/api/email', { action: azione, context: { target: target, displayName: exec.plan.target_user.displayName, app: exec.plan.context && exec.plan.context.rgCheck && exec.plan.context.rgCheck.appName, sessionId: sid } });
+  if (!risp || !risp.email) return;
+  var divSess = document.getElementById('sessione-' + sid);
+  if (!divSess) return;
+  var bubble = divSess.querySelector('.msg-bubble');
+  if (!bubble) return;
+  var eDiv = document.createElement('div');
+  eDiv.className = 'email-draft';
+  eDiv.innerHTML = '<div class="email-hdr"><span class="email-title">📧 Bozza email generata</span><button class="email-copy-btn" onclick="copiaEmail(this)">Copia</button></div>' +
+    '<div class="email-field"><span>A:</span>' + (risp.email.to || '') + '</div>' +
+    (risp.email.cc ? '<div class="email-field"><span>CC:</span>' + risp.email.cc + '</div>' : '') +
+    '<div class="email-field"><span>Oggetto:</span>' + (risp.email.subject || '') + '</div>' +
+    '<div class="email-body">' + escapeHtml(risp.email.body || '') + '</div>';
+  bubble.appendChild(eDiv);
+  document.getElementById('chat-msgs').scrollTop = 99999;
+}
+
+function copiaEmail(btn) {
+  var corpo = btn.closest('.email-draft').querySelector('.email-body');
+  navigator.clipboard.writeText(corpo.textContent).then(function() {
+    btn.textContent = '✓ Copiato!';
+    setTimeout(function() { btn.textContent = 'Copia'; }, 2000);
+  });
+}
+
+/* ========== SIDEBAR ========== */
+async function caricaUtenti() {
+  var dati = await api('GET', '/api/users');
+  var lista = document.getElementById('user-list');
+  if (!dati || !dati.data) { lista.innerHTML = '<p style="color:#888;font-size:11px">Errore caricamento utenti.</p>'; return; }
+  var html = '';
+  for (var i = 0; i < dati.data.length; i++) {
+    var u = dati.data[i];
+    var cls = !u.accountEnabled ? 'udot-dis' : (u.riskLevel && u.riskLevel !== 'none') ? 'udot-risk' : 'udot-ok';
+    html += '<div class="user-card" onclick="invia(\'Verifica stato account ' + u.displayName + '\')">' +
+      '<div class="udot ' + cls + '"></div>' +
+      '<div><div class="uname">' + u.displayName + '</div><div class="udept">' + u.department + '</div></div>' +
+      '</div>';
+  }
+  lista.innerHTML = html;
+}
+
+async function aggiornaRegistro() {
+  var dati = await api('GET', '/api/audit?limit=20');
+  if (!dati || !dati.logs) return;
+  var emptyEl = document.getElementById('audit-empty');
+  var listaEl = document.getElementById('audit-list');
+  if (!dati.logs.length) { if(emptyEl) emptyEl.style.display='block'; listaEl.innerHTML=''; return; }
+  if(emptyEl) emptyEl.style.display='none';
+  var etichette = {
+    execution_complete:'Esecuzione completata', conferma_approvata:'Richiesta Conferma approvata',
+    conferma_rifiutata:'Richiesta Conferma rifiutata', hitl_approved:'Richiesta Conferma approvata',
+    hitl_rejected:'Richiesta Conferma rifiutata', resp_app_workflow_avviato:'Workflow autorizzazione RA avviato', resp_app_confermato:'Autorizzazione RA confermata',
+    firewall_block:'🔒 Firewall bloccato'
+  };
+  var html = '';
+  for (var i = 0; i < dati.logs.length; i++) {
+    var l = dati.logs[i];
+    var lbl = l.step_label || etichette[l.event] || etichette[l.step_action] || l.event || l.step_action || '—';
+    var ora = new Date(l.timestamp).toLocaleTimeString('it-IT');
+    var ok   = l.result === 'success';
+    var fail = l.result === 'failure';
+    var isFw = l.event === 'firewall_block';
+    var color = isFw ? 'var(--r)' : '';
+    html += '<div class="audit-entry"><div class="audit-action" style="color:' + (color || 'var(--p)') + '">' + lbl + '</div>' +
+      '<div class="audit-time">' + ora + '</div>' +
+      '<div class="' + (ok ? 'audit-ok' : fail || isFw ? 'audit-fail' : '') + '">' +
+      (ok ? '✓ OK' : fail ? '✗ Errore' : isFw ? 'Bloccato — ' + (l.block_reason || '').substring(0,60) : (l.result || l.event || '')) +
+      (l.duration_ms ? ' · ' + l.duration_ms + 'ms' : '') + '</div></div>';
+  }
+  listaEl.innerHTML = html;
+}
+
+async function controllaConferme() {
+  var dati = await api('GET', '/api/validazione');
+  if (!dati) return;
+  var pendenti = dati.in_attesa || [];
+  var btnTab = document.getElementById('tab-conferma-btn');
+  if (btnTab) btnTab.textContent = pendenti.length ? '🔔 Conferma (' + pendenti.length + ')' : '🔔 Conferma';
+  if (pendenti.length > prevConferme) {
+    for (var x = prevConferme; x < pendenti.length; x++) {
+      if (!document.getElementById('popup-' + pendenti[x].validationId)) {
+        mostraPopupConferma(pendenti[x], x - prevConferme);
+      }
+    }
+  }
+  document.querySelectorAll('[id^="popup-"]').forEach(function(el) {
+    var vid = el.id.replace('popup-', '');
+    var trovato = false;
+    for (var y = 0; y < pendenti.length; y++) { if (pendenti[y].validationId === vid) { trovato = true; break; } }
+    if (!trovato) el.remove();
+  });
+  prevConferme = pendenti.length;
+  var emptyEl = document.getElementById('conf-empty');
+  var listaEl = document.getElementById('conf-list');
+  if (!pendenti.length) { if(emptyEl) emptyEl.style.display='block'; listaEl.innerHTML=''; return; }
+  if(emptyEl) emptyEl.style.display='none';
+  var html = '';
+  for (var i = 0; i < pendenti.length; i++) {
+    var r = pendenti[i];
+    var min = Math.max(0, Math.floor((new Date(r.expiresAt) - new Date()) / 60000));
+    html += '<div class="conf-list-item"><div class="conf-title">🔔 ' + (r.step && r.step.label || 'Azione in attesa') + '</div>' +
+      '<div style="font-size:11px;color:#666">Utente: <strong>' + (r.planContext && r.planContext.targetUser || '—') + '</strong><br>' +
+      'Rischio: <strong>' + (r.step && r.step.risk || '—') + '</strong> · Scade tra ' + min + ' min</div>' +
+      '<div class="conf-actions"><button class="btn-approva" onclick="approva(\'' + r.validationId + '\')">✓ Approva</button>' +
+      '<button class="btn-rifiuta" onclick="rifiuta(\'' + r.validationId + '\')">✗ Rifiuta</button></div></div>';
+  }
+  listaEl.innerHTML = html;
+}
+
+async function approva(id) {
+  await api('POST', '/api/validazione/' + id + '/approva', { operatore: 'operatore' });
+  controllaConferme();
+}
+async function rifiuta(id) {
+  var motivo = prompt('Motivo del rifiuto:') || 'Rifiutato';
+  await api('POST', '/api/validazione/' + id + '/rifiuta', { motivo: motivo, operatore: 'operatore' });
+  controllaConferme();
+}
+
+function mostraPopupConferma(r, offset) {
+  var popup = document.createElement('div');
+  popup.id = 'popup-' + r.validationId;
+  popup.className = 'notifica-popup';
+  popup.style.top = (70 + offset * 220) + 'px';
+  var min = Math.max(0, Math.floor((new Date(r.expiresAt) - new Date()) / 60000));
+  popup.innerHTML = '<div style="display:flex;align-items:center;gap:8px;margin-bottom:9px">' +
+    '<div class="popup-dot"></div>' +
+    '<span style="font-weight:700;font-size:12px;color:var(--o)">Richiesta Conferma</span>' +
+    '<button onclick="document.getElementById(\'popup-' + r.validationId + '\').remove()" style="margin-left:auto;background:none;border:none;font-size:18px;cursor:pointer;color:#888">×</button></div>' +
+    '<div style="font-size:12px;font-weight:600;margin-bottom:4px">' + (r.step && r.step.label || 'Azione in attesa') + '</div>' +
+    '<div style="font-size:11px;color:#666">Utente: <strong>' + (r.planContext && r.planContext.targetUser || '—') + '</strong></div>' +
+    '<div style="font-size:11px;color:#666">Rischio: <strong style="color:var(--o)">' + (r.step && r.step.risk || '—') + '</strong> · Scade tra ' + min + ' min</div>' +
+    '<div style="display:flex;gap:7px;margin-top:10px">' +
+    '<button onclick="approvaPopup(\'' + r.validationId + '\',this)" style="flex:1;background:var(--g);color:white;border:none;padding:7px;border-radius:7px;cursor:pointer;font-size:11px;font-weight:600">✓ Approva</button>' +
+    '<button onclick="rifiutaPopup(\'' + r.validationId + '\',this)" style="flex:1;background:var(--r);color:white;border:none;padding:7px;border-radius:7px;cursor:pointer;font-size:11px;font-weight:600">✗ Rifiuta</button></div>';
+  document.body.appendChild(popup);
+  setTimeout(function() { if(popup.parentNode) popup.remove(); }, 25 * 60 * 1000);
+}
+
+async function approvaPopup(id, btn) {
+  btn.closest('[id^="popup-"]').style.borderColor = 'var(--g)';
+  await api('POST', '/api/validazione/' + id + '/approva', { operatore: 'operatore' });
+  setTimeout(function() { var p = document.getElementById('popup-' + id); if(p) p.remove(); }, 1000);
+}
+async function rifiutaPopup(id, btn) {
+  var motivo = prompt('Motivo:') || 'Rifiutato';
+  btn.closest('[id^="popup-"]').style.borderColor = 'var(--r)';
+  await api('POST', '/api/validazione/' + id + '/rifiuta', { motivo: motivo, operatore: 'operatore' });
+  setTimeout(function() { var p = document.getElementById('popup-' + id); if(p) p.remove(); }, 1000);
+}
+
+async function caricaNHI() {
+  var dati = await api('GET', '/api/nhi');
+  if (!dati || !dati.data) return;
+  var html = '';
+  for (var i = 0; i < dati.data.length; i++) {
+    var n = dati.data[i];
+    html += '<div class="nhi-card"><div class="nhi-name">' + n.displayName + '</div>' +
+      '<div style="font-size:10px;color:#888">' + n.type + ' · Owner: ' + (n.owner || '<span style="color:var(--r)">Nessuno</span>') + '</div>' +
+      (n.issues && n.issues.length ? '<div style="font-size:10px;color:var(--r);margin-top:2px">⚠ ' + n.issues.join(', ') + '</div>' : '') +
+      '<span class="risk-pill risk-' + n.risk + '">' + n.risk + '</span></div>';
+  }
+  document.getElementById('nhi-list').innerHTML = html;
+}
+
+function apriTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+  document.getElementById('tab-' + tab).classList.add('active');
+  btn.classList.add('active');
+}
+
+function aggiungiMsgUtente(testo) {
+  var chat = document.getElementById('chat-msgs');
+  var d = document.createElement('div');
+  d.className = 'msg msg-user';
+  d.innerHTML = '<div class="msg-label">Tu</div><div class="msg-bubble">' + escapeHtml(testo) + '</div>';
+  chat.appendChild(d);
+  chat.scrollTop = 99999;
+}
+
+function aggiungiMsgSistema(html) {
+  var chat = document.getElementById('chat-msgs');
+  var d = document.createElement('div');
+  d.className = 'msg msg-sys';
+  d.innerHTML = '<div class="msg-label">Sistema</div><div class="msg-bubble">' + html + '</div>';
+  chat.appendChild(d);
+  chat.scrollTop = 99999;
+  return d;
+}
+
+function aggiungiThinking() {
+  var chat = document.getElementById('chat-msgs');
+  var d = document.createElement('div');
+  d.className = 'msg msg-sys';
+  d.innerHTML = '<div class="thinking"><div class="dp"><span></span><span></span><span></span></div> Agenti in elaborazione...</div>';
+  chat.appendChild(d);
+  chat.scrollTop = 99999;
+  return d;
+}
+
+/* Prefill da pagina ticket */
+var pf = sessionStorage.getItem('chat_prefill');
+if (pf) { sessionStorage.removeItem('chat_prefill'); document.getElementById('msg-in').value = pf; }
+
+avvia();
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+installation:
+  version: 6.6.0
+  installDate: 2026-05-08T17:29:47.817Z
+  lastUpdated: 2026-05-08T17:29:47.817Z
+modules:
+  - name: core
+    version: 6.6.0
+    installDate: 2026-05-08T17:29:40.128Z
+    lastUpdated: 2026-05-08T17:29:47.411Z
+    source: built-in
+    npmPackage: null
+    repoUrl: null
+  - name: bmm
+    version: 6.6.0
+    installDate: 2026-05-08T17:29:39.980Z
+    lastUpdated: 2026-05-08T17:29:47.426Z
+    source: built-in
+    npmPackage: null
+    repoUrl: null
+  - name: bmb
+    version: v1.7.0
+    installDate: 2026-05-08T17:29:40.667Z
+    lastUpdated: 2026-05-08T17:29:47.507Z
+    source: external
+    npmPackage: bmad-builder
+    repoUrl: https://github.com/bmad-code-org/bmad-builder
+    channel: stable
+    sha: 86033fc9aeae2ca6d52c7cdb675c1f4bf17fc1c1
+  - name: cis
+    version: v0.2.0
+    installDate: 2026-05-08T17:29:40.849Z
+    lastUpdated: 2026-05-08T17:29:47.599Z
+    source: external
+    npmPackage: bmad-creative-intelligence-suite
+    repoUrl: https://github.com/bmad-code-org/bmad-module-creative-intelligence-suite
+    channel: stable
+    sha: 14a63b893c07173b7a6cfe0fb6a9a72ba51d3cf1
+  - name: gds
+    version: v0.4.0
+    installDate: 2026-05-08T17:29:42.288Z
+    lastUpdated: 2026-05-08T17:29:47.732Z
+    source: external
+    npmPackage: bmad-game-dev-studio
+    repoUrl: https://github.com/bmad-code-org/bmad-module-game-dev-studio
+    channel: stable
+    sha: 07ef779abaafb21fe3a8d80d57cf0b4dc9801d60
+  - name: tea
+    version: v1.16.0
+    installDate: 2026-05-08T17:29:46.232Z
+    lastUpdated: 2026-05-08T17:29:47.817Z
+    source: external
+    npmPackage: bmad-method-test-architecture-enterprise
+    repoUrl: https://github.com/bmad-code-org/bmad-method-test-architecture-enterprise
+    channel: stable
+    sha: cd5427959c10b766e880cf112bf84b9fef0af848
+ides:
+  - claude-code
+  - codex
+  - cursor
+  - github-copilot
+  - command-code
+  - windsurf
+  - cline
+  - gemini
+  - mistral-vibe
+  - openclaw
+  - opencode
+  - openhands
+  - pi
+  - warp

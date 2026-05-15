@@ -1,0 +1,1084 @@
+{
+  "users": [
+    {
+      "id": "usr-001",
+      "displayName": "Mario Rossi",
+      "userPrincipalName": "mario.rossi@demo.local",
+      "accountEnabled": true,
+      "department": "Finance",
+      "jobTitle": "Financial Analyst",
+      "manager": "sofia.marino@demo.local",
+      "employeeId": "EMP-0042",
+      "employeeType": "Employee",
+      "startDate": "2021-03-15",
+      "accountType": "cloud-only",
+      "mfaRegistered": true,
+      "mfaMethods": [
+        "microsoftAuthenticator"
+      ],
+      "riskLevel": "none",
+      "lastSignIn": "2026-04-30T09:15:00Z",
+      "groups": [
+        "SG-Finance-All",
+        "SG-SAP-Users",
+        "SG-Office365",
+        "SG-Payment-Creator",
+        "SG-Payment-Approver"
+      ],
+      "licenses": [
+        "Microsoft365-E3"
+      ],
+      "roles": [],
+      "status": "active",
+      "location": "Milan",
+      "appAssignments": [
+        "ORDERHUB-OPE",
+        "AUTHFORMS-COMP",
+        "JOBORDER-OPE",
+        "ERPCORE-STD"
+      ],
+      "sailpoint": {
+        "accountId": "SP-mario.rossi",
+        "sources": [
+          "Active Directory",
+          "SAP ERP",
+          "Salesforce"
+        ],
+        "accessProfiles": [
+          "Finance-Standard",
+          "SAP-FullAccess"
+        ],
+        "lastCertification": "2025-10-01",
+        "certificationStatus": "completed"
+      }
+    },
+    {
+      "id": "usr-002",
+      "displayName": "Giulia Verdi",
+      "userPrincipalName": "giulia.verdi@demo.local",
+      "accountEnabled": false,
+      "department": "HR",
+      "jobTitle": "HR Specialist",
+      "manager": "marco.neri@demo.local",
+      "employeeId": "EMP-0078",
+      "employeeType": "Employee",
+      "startDate": "2019-06-01",
+      "terminationDate": "2026-03-15",
+      "accountType": "synced-onprem",
+      "onPremisesSyncEnabled": true,
+      "mfaRegistered": false,
+      "mfaMethods": [],
+      "riskLevel": "high",
+      "lastSignIn": "2026-03-15T14:22:00Z",
+      "groups": [
+        "SG-HR-All",
+        "SG-Office365"
+      ],
+      "licenses": [
+        "Microsoft365-E1"
+      ],
+      "roles": [],
+      "status": "leaver_pending_cleanup",
+      "location": "Rome",
+      "appAssignments": [
+        "AUTHFORMS-COMP",
+        "WORKFLOW-USER"
+      ],
+      "sailpoint": {
+        "accountId": "SP-giulia.verdi",
+        "sources": [
+          "Active Directory",
+          "Workday"
+        ],
+        "accessProfiles": [
+          "HR-Standard"
+        ],
+        "lastCertification": "2025-09-15",
+        "certificationStatus": "revocation_pending"
+      }
+    },
+    {
+      "id": "usr-003",
+      "displayName": "Luca Ferrari",
+      "userPrincipalName": "luca.ferrari@demo.local",
+      "accountEnabled": false,
+      "department": "IT",
+      "jobTitle": "Senior Developer",
+      "manager": "anna.ricci@demo.local",
+      "employeeId": "EMP-0031",
+      "employeeType": "Employee",
+      "startDate": "2018-11-12",
+      "accountType": "cloud-only",
+      "mfaRegistered": true,
+      "mfaMethods": [
+        "microsoftAuthenticator",
+        "phone"
+      ],
+      "riskLevel": "none",
+      "lastSignIn": "2026-04-30T08:00:00Z",
+      "groups": [],
+      "licenses": [],
+      "roles": [],
+      "status": "deprovisioned",
+      "location": "Milan",
+      "appAssignments": [
+        "NETOPS-OPE",
+        "NETMON-OPE",
+        "WEBPORTAL-USER"
+      ],
+      "sailpoint": {
+        "accountId": "SP-luca.ferrari",
+        "sources": [
+          "Active Directory",
+          "GitHub Enterprise",
+          "Azure DevOps",
+          "Jira"
+        ],
+        "accessProfiles": [
+          "IT-Developer",
+          "DevOps-Standard"
+        ],
+        "lastCertification": "2026-01-10",
+        "certificationStatus": "revoked"
+      }
+    },
+    {
+      "id": "usr-004",
+      "displayName": "Anna Ricci",
+      "userPrincipalName": "anna.ricci@demo.local",
+      "accountEnabled": true,
+      "department": "IT",
+      "jobTitle": "IT Manager",
+      "manager": "ceo@demo.local",
+      "employeeId": "EMP-0015",
+      "employeeType": "Employee",
+      "startDate": "2016-02-28",
+      "accountType": "cloud-only",
+      "mfaRegistered": true,
+      "mfaMethods": [
+        "microsoftAuthenticator",
+        "phone",
+        "hardwareToken"
+      ],
+      "riskLevel": "medium",
+      "lastSignIn": "2026-04-29T23:12:00Z",
+      "groups": [
+        "SG-IT-All",
+        "SG-IT-Managers",
+        "SG-Office365",
+        "SG-GlobalAdmin-Shadow",
+        "SG-Audit-Reader",
+        "SG-Audit-Writer"
+      ],
+      "licenses": [
+        "Microsoft365-E5",
+        "Azure-P2"
+      ],
+      "roles": [
+        "User Administrator"
+      ],
+      "status": "active",
+      "location": "Milan",
+      "anomaly": "admin_login_outside_hours",
+      "appAssignments": [
+        "NETOPS-ADM",
+        "NETMON-ADM",
+        "WORKFLOW-ADM",
+        "WEBPORTAL-ADM"
+      ],
+      "sailpoint": {
+        "accountId": "SP-anna.ricci",
+        "sources": [
+          "Active Directory",
+          "ServiceNow",
+          "SailPoint-Admin"
+        ],
+        "accessProfiles": [
+          "IT-Manager",
+          "Admin-Privileged"
+        ],
+        "lastCertification": "2026-02-01",
+        "certificationStatus": "completed"
+      }
+    },
+    {
+      "id": "usr-005",
+      "displayName": "Paolo Bruno",
+      "userPrincipalName": "paolo.bruno@demo.local",
+      "accountEnabled": true,
+      "department": "Sales",
+      "jobTitle": "Sales Manager",
+      "manager": "ceo@demo.local",
+      "employeeId": "EMP-0055",
+      "employeeType": "Employee",
+      "startDate": "2020-09-01",
+      "accountType": "cloud-only",
+      "mfaRegistered": true,
+      "mfaMethods": [
+        "microsoftAuthenticator"
+      ],
+      "riskLevel": "medium",
+      "lastSignIn": "2026-04-28T21:33:00Z",
+      "groups": [
+        "SG-Sales-All",
+        "SG-CRM-Users",
+        "SG-Office365",
+        "SG-Contract-Creator",
+        "SG-Contract-Approver"
+      ],
+      "licenses": [
+        "Microsoft365-E3"
+      ],
+      "roles": [],
+      "status": "active",
+      "location": "Milan",
+      "anomaly": "login_unusual_location",
+      "appAssignments": [
+        "ORDERHUB-OPE",
+        "AUTHFORMS-COMP",
+        "JOBORDER-OPE"
+      ],
+      "sailpoint": {
+        "accountId": "SP-paolo.bruno",
+        "sources": [
+          "Active Directory",
+          "Salesforce CRM",
+          "HubSpot"
+        ],
+        "accessProfiles": [
+          "Sales-Standard",
+          "CRM-Manager"
+        ],
+        "lastCertification": "2025-11-20",
+        "certificationStatus": "completed"
+      }
+    },
+    {
+      "id": "usr-006",
+      "displayName": "Sofia Marino",
+      "userPrincipalName": "sofia.marino@demo.local",
+      "accountEnabled": true,
+      "department": "Finance",
+      "jobTitle": "CFO",
+      "manager": "ceo@demo.local",
+      "employeeId": "EMP-0003",
+      "employeeType": "Employee",
+      "startDate": "2015-01-10",
+      "accountType": "cloud-only",
+      "mfaRegistered": true,
+      "mfaMethods": [
+        "microsoftAuthenticator",
+        "hardwareToken"
+      ],
+      "riskLevel": "none",
+      "lastSignIn": "2026-04-30T08:30:00Z",
+      "groups": [
+        "SG-Finance-All",
+        "SG-Finance-Executive",
+        "SG-SAP-Users",
+        "SG-Office365",
+        "SG-Payment-Approver",
+        "SG-Budget-Owner"
+      ],
+      "licenses": [
+        "Microsoft365-E5",
+        "Azure-P2"
+      ],
+      "roles": [
+        "Global Reader"
+      ],
+      "status": "active",
+      "location": "Milan",
+      "appAssignments": [
+        "ERPCORE-ADV",
+        "ORDERHUB-MGR",
+        "QUALITY-APP",
+        "AUTHFORMS-APP"
+      ],
+      "sailpoint": {
+        "accountId": "SP-sofia.marino",
+        "sources": [
+          "Active Directory",
+          "SAP ERP",
+          "Oracle Finance"
+        ],
+        "accessProfiles": [
+          "Finance-Executive",
+          "SAP-ReadOnly"
+        ],
+        "lastCertification": "2026-03-01",
+        "certificationStatus": "completed"
+      }
+    },
+    {
+      "id": "usr-007",
+      "displayName": "Marco Neri",
+      "userPrincipalName": "marco.neri@demo.local",
+      "accountEnabled": false,
+      "department": "HR",
+      "jobTitle": "HR Director",
+      "manager": "ceo@demo.local",
+      "employeeId": "EMP-0022",
+      "employeeType": "Employee",
+      "startDate": "2017-04-03",
+      "accountType": "cloud-only",
+      "mfaRegistered": true,
+      "mfaMethods": [
+        "microsoftAuthenticator"
+      ],
+      "riskLevel": "none",
+      "lastSignIn": "2026-04-29T16:10:00Z",
+      "groups": [],
+      "licenses": [],
+      "roles": [],
+      "status": "deprovisioned",
+      "location": "Rome",
+      "appAssignments": [
+        "AUTHFORMS-COMP",
+        "WORKFLOW-USER"
+      ],
+      "sailpoint": {
+        "accountId": "SP-marco.neri",
+        "sources": [
+          "Active Directory",
+          "Workday",
+          "SuccessFactors"
+        ],
+        "accessProfiles": [
+          "HR-Director",
+          "Workday-Admin"
+        ],
+        "lastCertification": "2026-01-15",
+        "certificationStatus": "revoked"
+      }
+    },
+    {
+      "id": "usr-008",
+      "displayName": "Chiara Fontana",
+      "userPrincipalName": "chiara.fontana@demo.local",
+      "accountEnabled": true,
+      "department": "IT",
+      "jobTitle": "Security Analyst",
+      "manager": "anna.ricci@demo.local",
+      "employeeId": "EMP-0088",
+      "employeeType": "Employee",
+      "startDate": "2023-02-20",
+      "accountType": "cloud-only",
+      "mfaRegistered": false,
+      "mfaMethods": [],
+      "riskLevel": "medium",
+      "lastSignIn": "2026-04-25T11:00:00Z",
+      "groups": [
+        "SG-IT-All",
+        "SG-Security-Team",
+        "SG-Office365"
+      ],
+      "licenses": [
+        "Microsoft365-E3",
+        "Azure-P2"
+      ],
+      "roles": [],
+      "status": "active",
+      "location": "Milan",
+      "anomaly": "mfa_not_registered",
+      "appAssignments": [
+        "QUALITY-AUD",
+        "NETOPS-VIEW"
+      ],
+      "sailpoint": {
+        "accountId": "SP-chiara.fontana",
+        "sources": [
+          "Active Directory",
+          "Sentinel",
+          "Defender"
+        ],
+        "accessProfiles": [
+          "Security-Analyst"
+        ],
+        "lastCertification": "2025-12-10",
+        "certificationStatus": "completed"
+      }
+    },
+    {
+      "id": "usr-009",
+      "displayName": "Roberto Galli",
+      "userPrincipalName": "roberto.galli@demo.local",
+      "accountEnabled": true,
+      "department": "Finance",
+      "jobTitle": "Junior Accountant",
+      "manager": "sofia.marino@demo.local",
+      "employeeId": "EMP-0112",
+      "employeeType": "Employee",
+      "startDate": "2024-09-02",
+      "accountType": "cloud-only",
+      "mfaRegistered": true,
+      "mfaMethods": [
+        "microsoftAuthenticator"
+      ],
+      "riskLevel": "none",
+      "lastSignIn": "2026-04-30T09:00:00Z",
+      "groups": [
+        "SG-Finance-All",
+        "SG-Office365",
+        "SG-SAP-ReadOnly"
+      ],
+      "licenses": [
+        "Microsoft365-E3"
+      ],
+      "roles": [],
+      "status": "active",
+      "location": "Milan",
+      "appAssignments": [
+        "ORDERHUB-RO",
+        "ERPCORE-STD",
+        "QUALITY-OPE"
+      ],
+      "sailpoint": {
+        "accountId": "SP-roberto.galli",
+        "sources": [
+          "Active Directory",
+          "SAP ERP"
+        ],
+        "accessProfiles": [
+          "Finance-Junior",
+          "SAP-ReadOnly"
+        ],
+        "lastCertification": null,
+        "certificationStatus": "never_certified"
+      }
+    },
+    {
+      "id": "usr-010",
+      "displayName": "Elena Conti",
+      "userPrincipalName": "elena.conti@demo.local",
+      "accountEnabled": true,
+      "department": "Legal",
+      "jobTitle": "Legal Counsel",
+      "manager": "ceo@demo.local",
+      "employeeId": "EMP-0067",
+      "employeeType": "Employee",
+      "startDate": "2022-05-16",
+      "accountType": "cloud-only",
+      "mfaRegistered": true,
+      "mfaMethods": [
+        "microsoftAuthenticator",
+        "phone"
+      ],
+      "riskLevel": "none",
+      "lastSignIn": "2026-04-28T14:00:00Z",
+      "groups": [
+        "SG-Legal-All",
+        "SG-Office365",
+        "SG-Contract-Reader",
+        "SG-NDA-Manager"
+      ],
+      "licenses": [
+        "Microsoft365-E3"
+      ],
+      "roles": [],
+      "status": "active",
+      "location": "Milan",
+      "appAssignments": [
+        "AUTHFORMS-COMP",
+        "QUALITY-AUD"
+      ],
+      "sailpoint": {
+        "accountId": "SP-elena.conti",
+        "sources": [
+          "Active Directory",
+          "DocuSign",
+          "SharePoint-Legal"
+        ],
+        "accessProfiles": [
+          "Legal-Standard"
+        ],
+        "lastCertification": "2026-02-20",
+        "certificationStatus": "completed"
+      }
+    },
+    {
+      "id": "usr-ext-001",
+      "displayName": "Thomas Weber",
+      "userPrincipalName": "thomas.weber@external.demo",
+      "accountEnabled": true,
+      "department": "IT - External",
+      "jobTitle": "External IT Consultant",
+      "manager": "anna.ricci@demo.local",
+      "employeeId": null,
+      "employeeType": "Guest",
+      "startDate": "2026-01-15",
+      "expiryDate": "2026-06-30",
+      "accountType": "guest",
+      "guestUser": true,
+      "mfaRegistered": true,
+      "mfaMethods": [
+        "microsoftAuthenticator"
+      ],
+      "riskLevel": "none",
+      "lastSignIn": "2026-04-29T10:00:00Z",
+      "groups": [
+        "SG-Guests",
+        "SG-IT-External",
+        "SG-Dev-ReadOnly"
+      ],
+      "licenses": [
+        "Microsoft365-F1"
+      ],
+      "roles": [],
+      "status": "active",
+      "location": "External",
+      "appAssignments": [
+        "WEBPORTAL-USER",
+        "NETOPS-VIEW"
+      ],
+      "sailpoint": {
+        "accountId": "SP-thomas.weber",
+        "sources": [
+          "Active Directory"
+        ],
+        "accessProfiles": [
+          "Guest-IT-Limited"
+        ],
+        "lastCertification": "2026-01-15",
+        "certificationStatus": "completed"
+      }
+    },
+    {
+      "id": "usr-1778859598192",
+      "accountEnabled": true,
+      "mfaRegistered": false,
+      "mfaMethods": [],
+      "riskLevel": "none",
+      "status": "active",
+      "groups": [
+        "SG-Office365"
+      ],
+      "licenses": [
+        "Microsoft365-E3"
+      ],
+      "appAssignments": [],
+      "sailpoint": {
+        "accountId": "SP-nuovo.collaboratore",
+        "sources": [
+          "Active Directory"
+        ],
+        "accessProfiles": [],
+        "certificationStatus": "pending_first_review"
+      },
+      "userPrincipalName": "nuovo.collaboratore@demo.local",
+      "displayName": "nuovo.collaboratore@demo.local",
+      "department": "N/A",
+      "jobTitle": "N/A",
+      "manager": "",
+      "accountType": "cloud-only"
+    }
+  ],
+  "signInLogs": {
+    "mario.rossi@demo.local": [
+      {
+        "timestamp": "2026-04-30T09:15:00Z",
+        "status": "failure",
+        "errorCode": "53003",
+        "errorDescription": "Blocked by Conditional Access Policy: Require MFA for Finance Apps",
+        "ipAddress": "192.168.1.45",
+        "location": "Milan, IT",
+        "app": "SAP ERP",
+        "device": "Windows 11",
+        "browser": "Chrome"
+      },
+      {
+        "timestamp": "2026-04-30T09:12:00Z",
+        "status": "failure",
+        "errorCode": "53003",
+        "errorDescription": "Blocked by Conditional Access Policy: Require MFA for Finance Apps",
+        "ipAddress": "192.168.1.45",
+        "location": "Milan, IT",
+        "app": "SAP ERP",
+        "device": "Windows 11",
+        "browser": "Chrome"
+      },
+      {
+        "timestamp": "2026-04-29T16:30:00Z",
+        "status": "success",
+        "ipAddress": "192.168.1.45",
+        "location": "Milan, IT",
+        "app": "Office365",
+        "device": "Windows 11",
+        "browser": "Edge"
+      },
+      {
+        "timestamp": "2026-04-29T09:00:00Z",
+        "status": "success",
+        "ipAddress": "192.168.1.45",
+        "location": "Milan, IT",
+        "app": "SAP ERP",
+        "device": "Windows 11",
+        "browser": "Chrome"
+      }
+    ],
+    "giulia.verdi@demo.local": [
+      {
+        "timestamp": "2026-03-15T14:22:00Z",
+        "status": "failure",
+        "errorCode": "50057",
+        "errorDescription": "Account is disabled",
+        "ipAddress": "10.0.0.12",
+        "location": "Rome, IT",
+        "app": "Teams",
+        "device": "MacOS",
+        "browser": "Chrome"
+      },
+      {
+        "timestamp": "2026-03-14T10:00:00Z",
+        "status": "success",
+        "ipAddress": "10.0.0.12",
+        "location": "Rome, IT",
+        "app": "Office365",
+        "device": "MacOS",
+        "browser": "Chrome"
+      }
+    ],
+    "paolo.bruno@demo.local": [
+      {
+        "timestamp": "2026-04-28T21:33:00Z",
+        "status": "success",
+        "ipAddress": "41.23.45.67",
+        "location": "Lagos, NG",
+        "app": "Salesforce CRM",
+        "device": "iPhone",
+        "browser": "Safari",
+        "risk": "atypical_travel",
+        "riskDetail": "Impossible travel: Milan 08:10 → Lagos 21:33"
+      },
+      {
+        "timestamp": "2026-04-28T08:10:00Z",
+        "status": "success",
+        "ipAddress": "192.168.2.10",
+        "location": "Milan, IT",
+        "app": "Office365",
+        "device": "Windows 11",
+        "browser": "Edge"
+      },
+      {
+        "timestamp": "2026-04-27T14:00:00Z",
+        "status": "success",
+        "ipAddress": "192.168.2.10",
+        "location": "Milan, IT",
+        "app": "HubSpot",
+        "device": "Windows 11",
+        "browser": "Chrome"
+      }
+    ],
+    "anna.ricci@demo.local": [
+      {
+        "timestamp": "2026-04-29T23:12:00Z",
+        "status": "success",
+        "ipAddress": "87.12.34.56",
+        "location": "Unknown, --",
+        "app": "Azure AD Admin",
+        "device": "Windows 11",
+        "browser": "Chrome",
+        "risk": "signin_outside_hours",
+        "riskDetail": "Admin login at 23:12 from unknown IP"
+      },
+      {
+        "timestamp": "2026-04-30T07:45:00Z",
+        "status": "success",
+        "ipAddress": "192.168.1.10",
+        "location": "Milan, IT",
+        "app": "Azure Portal",
+        "device": "Windows 11",
+        "browser": "Edge"
+      },
+      {
+        "timestamp": "2026-04-28T08:00:00Z",
+        "status": "success",
+        "ipAddress": "192.168.1.10",
+        "location": "Milan, IT",
+        "app": "ServiceNow",
+        "device": "Windows 11",
+        "browser": "Edge"
+      }
+    ],
+    "chiara.fontana@demo.local": [
+      {
+        "timestamp": "2026-04-25T11:00:00Z",
+        "status": "success",
+        "ipAddress": "192.168.1.90",
+        "location": "Milan, IT",
+        "app": "Microsoft Sentinel",
+        "device": "Windows 11",
+        "browser": "Edge"
+      },
+      {
+        "timestamp": "2026-04-24T15:00:00Z",
+        "status": "failure",
+        "errorCode": "50076",
+        "errorDescription": "MFA required but not configured",
+        "ipAddress": "192.168.1.90",
+        "location": "Milan, IT",
+        "app": "Azure Portal",
+        "device": "Windows 11",
+        "browser": "Chrome"
+      }
+    ],
+    "thomas.weber@external.demo": [
+      {
+        "timestamp": "2026-04-29T10:00:00Z",
+        "status": "success",
+        "ipAddress": "85.45.12.33",
+        "location": "Munich, DE",
+        "app": "Azure DevOps",
+        "device": "Windows 11",
+        "browser": "Chrome"
+      },
+      {
+        "timestamp": "2026-04-28T09:00:00Z",
+        "status": "success",
+        "ipAddress": "85.45.12.33",
+        "location": "Munich, DE",
+        "app": "SharePoint",
+        "device": "Windows 11",
+        "browser": "Chrome"
+      }
+    ]
+  },
+  "conditionalAccessPolicies": [
+    {
+      "id": "cap-001",
+      "displayName": "Require MFA for Finance Apps",
+      "state": "enabled",
+      "conditions": {
+        "users": {
+          "includeGroups": [
+            "SG-Finance-All",
+            "SG-Finance-Executive"
+          ]
+        },
+        "applications": {
+          "includeApps": [
+            "SAP ERP",
+            "Oracle Finance",
+            "Budget-Tool"
+          ]
+        }
+      },
+      "grantControls": {
+        "operator": "OR",
+        "builtInControls": [
+          "mfa"
+        ]
+      },
+      "excludedUsers": [
+        "mario.rossi@demo.local"
+      ],
+      "createdDateTime": "2024-01-15",
+      "modifiedDateTime": "2025-06-01"
+    },
+    {
+      "id": "cap-002",
+      "displayName": "Block Legacy Authentication",
+      "state": "enabled",
+      "conditions": {
+        "clientAppTypes": [
+          "exchangeActiveSync",
+          "other"
+        ]
+      },
+      "grantControls": {
+        "operator": "OR",
+        "builtInControls": [
+          "block"
+        ]
+      },
+      "excludedUsers": [],
+      "createdDateTime": "2023-11-01",
+      "modifiedDateTime": "2024-03-10"
+    },
+    {
+      "id": "cap-003",
+      "displayName": "Require Compliant Device for Admin",
+      "state": "enabled",
+      "conditions": {
+        "users": {
+          "includeRoles": [
+            "Global Administrator",
+            "User Administrator"
+          ]
+        },
+        "platforms": {
+          "includePlatforms": [
+            "all"
+          ]
+        }
+      },
+      "grantControls": {
+        "operator": "AND",
+        "builtInControls": [
+          "mfa",
+          "compliantDevice"
+        ]
+      },
+      "excludedUsers": [],
+      "createdDateTime": "2024-06-01",
+      "modifiedDateTime": "2025-01-20"
+    },
+    {
+      "id": "cap-004",
+      "displayName": "Block Risky Sign-ins",
+      "state": "enabled",
+      "conditions": {
+        "users": {
+          "includeUsers": [
+            "All"
+          ]
+        },
+        "signInRiskLevels": [
+          "high"
+        ]
+      },
+      "grantControls": {
+        "operator": "OR",
+        "builtInControls": [
+          "block"
+        ]
+      },
+      "excludedUsers": [],
+      "createdDateTime": "2025-03-01",
+      "modifiedDateTime": "2025-03-01"
+    },
+    {
+      "id": "cap-005",
+      "displayName": "Guest Access - Limited Apps Only",
+      "state": "enabled",
+      "conditions": {
+        "users": {
+          "includeGroups": [
+            "SG-Guests"
+          ]
+        }
+      },
+      "grantControls": {
+        "operator": "OR",
+        "builtInControls": [
+          "mfa"
+        ]
+      },
+      "excludedUsers": [],
+      "createdDateTime": "2025-09-01",
+      "modifiedDateTime": "2025-09-01"
+    }
+  ],
+  "nonHumanIdentities": [
+    {
+      "id": "nhi-001",
+      "displayName": "SalesforceIntegration-SP",
+      "type": "ServicePrincipal",
+      "appId": "app-sf-int-001",
+      "owner": null,
+      "permissions": [
+        "User.Read.All",
+        "Mail.Send",
+        "Contacts.ReadWrite"
+      ],
+      "credentialType": "ClientSecret",
+      "credentialExpiry": "2026-01-15T00:00:00Z",
+      "lastUsed": "2026-04-20T10:00:00Z",
+      "createdDate": "2022-03-01",
+      "risk": "MEDIUM",
+      "issues": [
+        "no_owner",
+        "credential_expired"
+      ],
+      "description": "Integrazione Salesforce CRM — owner originale ha lasciato"
+    },
+    {
+      "id": "nhi-002",
+      "displayName": "DevOps-Pipeline-SP",
+      "type": "ServicePrincipal",
+      "appId": "app-devops-002",
+      "owner": "luca.ferrari@demo.local",
+      "permissions": [
+        "Directory.Read.All",
+        "AuditLog.Read.All"
+      ],
+      "credentialType": "Certificate",
+      "credentialExpiry": "2026-12-31T00:00:00Z",
+      "lastUsed": "2026-04-30T06:00:00Z",
+      "createdDate": "2023-01-15",
+      "risk": "LOW",
+      "issues": [],
+      "description": "Pipeline Azure DevOps per CI/CD"
+    },
+    {
+      "id": "nhi-003",
+      "displayName": "LegacyERP-ManagedIdentity",
+      "type": "ManagedIdentity",
+      "appId": "app-erp-mi-003",
+      "owner": null,
+      "permissions": [
+        "Directory.ReadWrite.All",
+        "User.ReadWrite.All",
+        "Group.ReadWrite.All"
+      ],
+      "credentialType": "ManagedIdentity",
+      "credentialExpiry": null,
+      "lastUsed": "2025-11-30T00:00:00Z",
+      "createdDate": "2020-06-01",
+      "risk": "HIGH",
+      "issues": [
+        "no_owner",
+        "excessive_permissions",
+        "inactive_180days"
+      ],
+      "description": "ERP legacy — inattivo 5 mesi, permessi eccessivi su Directory"
+    },
+    {
+      "id": "nhi-004",
+      "displayName": "HR-Workday-Connector",
+      "type": "ServicePrincipal",
+      "appId": "app-workday-004",
+      "owner": "marco.neri@demo.local",
+      "permissions": [
+        "User.ReadWrite.All",
+        "Directory.Read.All"
+      ],
+      "credentialType": "ClientSecret",
+      "credentialExpiry": "2026-09-30T00:00:00Z",
+      "lastUsed": "2026-04-30T05:00:00Z",
+      "createdDate": "2023-06-01",
+      "risk": "LOW",
+      "issues": [],
+      "description": "Connettore SailPoint-Workday per sync HR"
+    },
+    {
+      "id": "nhi-005",
+      "displayName": "TestApp-Dev-SP",
+      "type": "ServicePrincipal",
+      "appId": "app-test-dev-005",
+      "owner": null,
+      "permissions": [
+        "User.Read.All",
+        "Mail.ReadWrite",
+        "Files.ReadWrite.All",
+        "Sites.FullControl.All"
+      ],
+      "credentialType": "ClientSecret",
+      "credentialExpiry": "2024-12-31T00:00:00Z",
+      "lastUsed": "2025-01-10T00:00:00Z",
+      "createdDate": "2024-06-01",
+      "risk": "HIGH",
+      "issues": [
+        "no_owner",
+        "credential_expired",
+        "excessive_permissions",
+        "inactive_90days"
+      ],
+      "description": "App test mai eliminata con permessi di produzione"
+    }
+  ],
+  "accessReviewCampaigns": [
+    {
+      "id": "rev-001",
+      "name": "Q1 2026 Finance Access Review",
+      "status": "overdue",
+      "startDate": "2026-01-15",
+      "dueDate": "2026-02-15",
+      "scope": [
+        "SG-Finance-All",
+        "SG-Payment-Creator",
+        "SG-Payment-Approver"
+      ],
+      "totalItems": 12,
+      "reviewed": 7,
+      "approved": 6,
+      "revoked": 1,
+      "pending": 5,
+      "reviewer": "sofia.marino@demo.local"
+    },
+    {
+      "id": "rev-002",
+      "name": "Privileged Access Review - IT Admins",
+      "status": "in_progress",
+      "startDate": "2026-04-01",
+      "dueDate": "2026-04-30",
+      "scope": [
+        "SG-IT-Managers",
+        "SG-GlobalAdmin-Shadow",
+        "User Administrator"
+      ],
+      "totalItems": 8,
+      "reviewed": 3,
+      "approved": 3,
+      "revoked": 0,
+      "pending": 5,
+      "reviewer": "anna.ricci@demo.local"
+    }
+  ],
+  "openTickets": [
+    {
+      "id": "TK-2441",
+      "type": "app_enablement",
+      "requestor": "roberto.galli@demo.local",
+      "app": "ERPCORE",
+      "profile": "ERPCORE-ADV",
+      "status": "pending_rg",
+      "rgStatus": "not_submitted",
+      "slaDeadline": "2026-05-14T17:00:00Z",
+      "note": "Utente ha chiesto profilo Advanced senza autorizzazione RA — in attesa di modulo dal Responsabile Applicativo (Team_BusinessApps)",
+      "createdDate": "2026-05-13"
+    },
+    {
+      "id": "TK-2442",
+      "type": "app_enablement",
+      "requestor": "chiara.fontana@demo.local",
+      "app": "QUALITY",
+      "profile": "QUALITY-OPE",
+      "status": "pending_verification",
+      "rgStatus": "approved",
+      "slaDeadline": "2026-05-15T16:00:00Z",
+      "note": "Autorizzazione RA approvata, verifica identità madre in corso",
+      "createdDate": "2026-05-14"
+    },
+    {
+      "id": "TK-2443",
+      "type": "user_creation",
+      "requestor": "marco.neri@demo.local",
+      "targetUser": "nuovo.collaboratore@demo.local",
+      "accountType": "cloud-only",
+      "status": "pending",
+      "slaDeadline": "2026-05-16T17:00:00Z",
+      "note": "Nuovo collaboratore HR — identità madre da creare su Entra ID, manager Marco Neri",
+      "createdDate": "2026-05-15"
+    },
+    {
+      "id": "TK-2444",
+      "type": "password_reset",
+      "requestor": "paolo.bruno@demo.local",
+      "status": "pending",
+      "slaDeadline": "2026-05-15T15:00:00Z",
+      "note": "Reset password — utente cloud-only confermato, in attesa di richiesta conferma operatore",
+      "createdDate": "2026-05-15"
+    },
+    {
+      "id": "TK-2445",
+      "type": "pim_request",
+      "requestor": "luca.ferrari@demo.local",
+      "roleRequested": "Exchange Administrator",
+      "status": "wrong_queue",
+      "slaDeadline": "2026-05-13T17:00:00Z",
+      "note": "Richiesta PIM arrivata al Team IAM per errore — da reindirizzare al Team PIM (ticket ServiceNow categoria PIM Access Request)",
+      "createdDate": "2026-05-12"
+    },
+    {
+      "id": "TK-2446",
+      "type": "app_troubleshoot",
+      "requestor": "mario.rossi@demo.local",
+      "app": "ERPCORE",
+      "status": "investigating",
+      "slaDeadline": "2026-05-16T09:00:00Z",
+      "note": "Utente abilitato su Entra ID ma non vede profilo Advanced in ERPCORE — verificare scope: GA o Team IAM",
+      "createdDate": "2026-05-15"
+    }
+  ]
+}

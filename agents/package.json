@@ -1,0 +1,11 @@
+{
+  "name": "agentic-iam",
+  "version": "1.0.0",
+  "description": "Agentic IAM — Copilota Operativo PoC",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {}
+}

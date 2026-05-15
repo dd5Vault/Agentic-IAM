@@ -1,0 +1,1432 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Agentic IAM v3.0 — Dashboard</title>
+    <style>
+      :root {
+        --p: #3d0070;
+        --pm: #7b00d4;
+        --pl: #f3e8ff;
+        --t: #0d6e8a;
+        --tl: #e0f2f7;
+        --g: #1a7a4a;
+        --gl: #d1fae5;
+        --r: #b91c1c;
+        --rl: #fee2e2;
+        --o: #e8720c;
+        --ol: #fff3e0;
+        --am: #92400e;
+        --al: #fef3c7;
+        --border: #e0e0e0;
+        --text: #1a1a1a;
+        --muted: #666;
+        --gray: #f5f5f7;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: #f0f0f5;
+        color: var(--text);
+      }
+      nav {
+        background: var(--p);
+        color: white;
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+        height: 54px;
+        gap: 14px;
+      }
+      nav h1 {
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .nl {
+        display: flex;
+        gap: 4px;
+        margin-left: auto;
+      }
+      .nl a {
+        color: rgba(255, 255, 255, 0.75);
+        text-decoration: none;
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-size: 11px;
+        transition: background 0.15s;
+      }
+      .nl a:hover,
+      .nl a.active {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+      }
+      .live {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #4ade80;
+        animation: blink 2s infinite;
+        margin-left: 8px;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+      .page {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 22px;
+      }
+      .hdr {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .hdr h2 {
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .upd {
+        font-size: 11px;
+        color: var(--muted);
+        margin-left: auto;
+      }
+      /* KPI */
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .kpi {
+        background: white;
+        border: 0.5px solid var(--border);
+        border-radius: 10px;
+        padding: 14px 16px;
+        position: relative;
+        overflow: hidden;
+      }
+      .kpi::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        border-radius: 10px 10px 0 0;
+      }
+      .kp::before {
+        background: var(--pm);
+      }
+      .kg::before {
+        background: var(--g);
+      }
+      .kr::before {
+        background: var(--r);
+      }
+      .ko::before {
+        background: var(--o);
+      }
+      .kt::before {
+        background: var(--t);
+      }
+      .kam::before {
+        background: var(--am);
+      }
+      .kpi-lbl {
+        font-size: 10px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+        line-height: 1.3;
+      }
+      .kpi-val {
+        font-size: 30px;
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: 2px;
+      }
+      .kp .kpi-val {
+        color: var(--pm);
+      }
+      .kg .kpi-val {
+        color: var(--g);
+      }
+      .kr .kpi-val {
+        color: var(--r);
+      }
+      .ko .kpi-val {
+        color: var(--o);
+      }
+      .kt .kpi-val {
+        color: var(--t);
+      }
+      .kam .kpi-val {
+        color: var(--am);
+      }
+      .kpi-sub {
+        font-size: 10px;
+        color: var(--muted);
+      }
+      /* LAYOUT */
+      .grid2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 14px;
+      }
+      .card {
+        background: white;
+        border: 0.5px solid var(--border);
+        border-radius: 10px;
+        padding: 17px;
+      }
+      .card-hdr {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+      .card-hdr h3 {
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .badge-live {
+        font-size: 10px;
+        background: var(--gl);
+        color: var(--g);
+        padding: 2px 8px;
+        border-radius: 8px;
+        margin-left: auto;
+      }
+      .badge-warn {
+        font-size: 10px;
+        background: var(--ol);
+        color: var(--o);
+        padding: 2px 8px;
+        border-radius: 8px;
+        margin-left: auto;
+      }
+      .badge-red {
+        font-size: 10px;
+        background: var(--rl);
+        color: var(--r);
+        padding: 2px 8px;
+        border-radius: 8px;
+        margin-left: auto;
+      }
+      /* TABELLA UTENTI */
+      .utbl {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+      .utbl th {
+        text-align: left;
+        padding: 7px 8px;
+        border-bottom: 1px solid var(--border);
+        font-size: 10px;
+        color: var(--muted);
+        text-transform: uppercase;
+        font-weight: 500;
+      }
+      .utbl td {
+        padding: 8px 8px;
+        border-bottom: 0.5px solid var(--border);
+        vertical-align: middle;
+      }
+      .utbl tr:last-child td {
+        border-bottom: none;
+      }
+      .utbl tr:hover td {
+        background: var(--gray);
+      }
+      .pill {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 1px 7px;
+        border-radius: 8px;
+      }
+      .p-ok {
+        background: var(--gl);
+        color: var(--g);
+      }
+      .p-dis {
+        background: var(--rl);
+        color: var(--r);
+      }
+      .p-med {
+        background: var(--al);
+        color: var(--am);
+      }
+      .p-none {
+        background: var(--gray);
+        color: var(--muted);
+      }
+      .p-guest {
+        background: var(--tl);
+        color: var(--t);
+      }
+      .p-cloud {
+        background: var(--pl);
+        color: var(--pm);
+      }
+      .p-sync {
+        background: #f0f0f0;
+        color: #555;
+      }
+      .abtn {
+        background: none;
+        border: 0.5px solid var(--border);
+        border-radius: 5px;
+        padding: 3px 8px;
+        font-size: 10px;
+        cursor: pointer;
+        color: var(--pm);
+      }
+      .abtn:hover {
+        background: var(--pl);
+        border-color: var(--pm);
+      }
+      /* FEED */
+      .feed-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 8px 0;
+        border-bottom: 0.5px solid var(--border);
+      }
+      .feed-item:last-child {
+        border-bottom: none;
+      }
+      .feed-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        margin-top: 4px;
+        flex-shrink: 0;
+      }
+      .fd-ok {
+        background: var(--g);
+      }
+      .fd-fail {
+        background: var(--r);
+      }
+      .fd-ev {
+        background: var(--t);
+      }
+      .fd-neu {
+        background: #ccc;
+      }
+      .feed-txt {
+        font-size: 11px;
+        font-weight: 500;
+        flex: 1;
+      }
+      .feed-ora {
+        font-size: 10px;
+        color: var(--muted);
+        margin-top: 1px;
+      }
+      .feed-risk {
+        font-size: 10px;
+        font-weight: 600;
+        padding: 1px 6px;
+        border-radius: 7px;
+        flex-shrink: 0;
+      }
+      .fr-LOW {
+        background: var(--gl);
+        color: var(--g);
+      }
+      .fr-MEDIUM {
+        background: var(--al);
+        color: var(--am);
+      }
+      .fr-HIGH {
+        background: var(--rl);
+        color: var(--r);
+      }
+      /* RISK BARS */
+      .rbar-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+      .rbar-lbl {
+        font-size: 11px;
+        font-weight: 600;
+        min-width: 55px;
+      }
+      .rbar-bg {
+        flex: 1;
+        background: var(--gray);
+        border-radius: 4px;
+        height: 9px;
+        overflow: hidden;
+      }
+      .rbar-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.7s ease;
+      }
+      .rb-LOW {
+        background: var(--g);
+      }
+      .rb-MEDIUM {
+        background: var(--o);
+      }
+      .rb-HIGH {
+        background: var(--r);
+      }
+      .rbar-n {
+        font-size: 11px;
+        color: var(--muted);
+        min-width: 22px;
+        text-align: right;
+      }
+      /* NHI */
+      .nhi-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .nhi-item {
+        background: var(--gray);
+        border-radius: 7px;
+        padding: 9px;
+        border-left: 3px solid var(--border);
+      }
+      .nhi-low {
+        border-color: var(--g);
+      }
+      .nhi-medium {
+        border-color: var(--o);
+      }
+      .nhi-high {
+        border-color: var(--r);
+      }
+      .nhi-name {
+        font-size: 11px;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+      .nhi-det {
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .nhi-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3px;
+        margin-top: 4px;
+      }
+      .nhi-tag {
+        font-size: 9px;
+        background: var(--rl);
+        color: var(--r);
+        padding: 1px 5px;
+        border-radius: 5px;
+      }
+      /* SOD */
+      .sod-item {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 11px;
+        margin-bottom: 8px;
+      }
+      .sod-user {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+      .avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--pl);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--pm);
+        flex-shrink: 0;
+      }
+      .sod-conflict {
+        border-radius: 6px;
+        padding: 7px 9px;
+        margin-bottom: 4px;
+        border-left: 3px solid;
+      }
+      .sod-critical {
+        background: var(--rl);
+        border-color: var(--r);
+      }
+      .sod-high {
+        background: var(--al);
+        border-color: var(--am);
+      }
+      /* TICKET MINI */
+      .tk-mini {
+        border: 0.5px solid var(--border);
+        border-radius: 7px;
+        padding: 9px 11px;
+        margin-bottom: 6px;
+        cursor: pointer;
+        transition: background 0.1s;
+      }
+      .tk-mini:hover {
+        background: var(--gray);
+      }
+      .tk-id {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--pm);
+      }
+      .tk-note {
+        font-size: 11px;
+        color: var(--text);
+        margin-top: 2px;
+      }
+      .tk-sla-ok {
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--g);
+      }
+      .tk-sla-warn {
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--o);
+      }
+      .tk-sla-breach {
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--r);
+      }
+      /* VALIDAZIONE */
+      .val-item {
+        background: var(--ol);
+        border: 1px solid var(--o);
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 8px;
+      }
+      .val-title {
+        color: var(--o);
+        font-weight: 700;
+        font-size: 12px;
+        margin-bottom: 6px;
+      }
+      .val-btns {
+        display: flex;
+        gap: 7px;
+        margin-top: 9px;
+      }
+      .btn-approva {
+        background: var(--g);
+        color: white;
+        border: none;
+        padding: 6px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .btn-rifiuta {
+        background: var(--r);
+        color: white;
+        border: none;
+        padding: 6px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      /* TOAST */
+      .toast-c {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        z-index: 999;
+      }
+      .toast {
+        background: var(--text);
+        color: white;
+        padding: 11px 15px;
+        border-radius: 9px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        animation: slideIn 0.2s ease;
+        min-width: 220px;
+      }
+      .toast-ok {
+        background: var(--g);
+      }
+      .toast-warn {
+        background: var(--o);
+      }
+      @keyframes slideIn {
+        from {
+          transform: translateX(110%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      /* POPUP VALIDAZIONE */
+      .notifica-popup {
+        position: fixed;
+        top: 70px;
+        right: 18px;
+        width: 340px;
+        z-index: 9999;
+        background: white;
+        border: 2px solid var(--o);
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        animation: slideIn 0.3s ease;
+        font-family: "Segoe UI", Arial, sans-serif;
+      }
+      .popup-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--o);
+        animation: blink 1s infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div style="font-size: 16px">🛡️</div>
+      <h1>Agentic IAM v3.0 — Copilota Operativo</h1>
+      <div class="nl">
+        <a href="/" class="nl">Chat</a>
+        <a href="/dashboard.html" class="nl active">Dashboard</a>
+        <a href="/tickets.html" class="nl">Ticket DL</a>
+        <a href="/sla.html" class="nl">Metriche SLA</a>
+        <a href="/apps.html" class="nl">Catalogo App</a>
+      </div>
+      <div class="live" title="Auto-refresh 5s"></div>
+    </nav>
+
+    <div class="page">
+      <div class="hdr">
+        <h2>Dashboard operativa</h2>
+        <span class="upd" id="upd">Caricamento...</span>
+      </div>
+
+      <!-- KPI -->
+      <div class="kpis">
+        <div class="kpi kp">
+          <div class="kpi-lbl">Utenti totali</div>
+          <div class="kpi-val" id="k-tot">—</div>
+          <div class="kpi-sub" id="k-tot-s">—</div>
+        </div>
+        <div class="kpi kg">
+          <div class="kpi-lbl">Account attivi</div>
+          <div class="kpi-val" id="k-att">—</div>
+          <div class="kpi-sub">accountEnabled: true</div>
+        </div>
+        <div class="kpi kr">
+          <div class="kpi-lbl">Disabilitati</div>
+          <div class="kpi-val" id="k-dis">—</div>
+          <div class="kpi-sub">accountEnabled: false</div>
+        </div>
+        <div class="kpi ko">
+          <div class="kpi-lbl">A rischio</div>
+          <div class="kpi-val" id="k-ris">—</div>
+          <div class="kpi-sub">riskLevel: medium/high</div>
+        </div>
+        <div class="kpi kt">
+          <div class="kpi-lbl">Senza MFA</div>
+          <div class="kpi-val" id="k-mfa">—</div>
+          <div class="kpi-sub">MFA non registrato</div>
+        </div>
+        <div class="kpi kam">
+          <div class="kpi-lbl">Richiesta Conferma in attesa</div>
+          <div class="kpi-val" id="k-val">—</div>
+          <div class="kpi-sub">Approvazioni pendenti</div>
+        </div>
+        <div class="kpi kr">
+          <div class="kpi-lbl">Ticket DL aperti</div>
+          <div class="kpi-val" id="k-tk">—</div>
+          <div class="kpi-sub" id="k-tk-s">—</div>
+        </div>
+        <div class="kpi kp">
+          <div class="kpi-lbl">SoD conflitti</div>
+          <div class="kpi-val" id="k-sod">—</div>
+          <div class="kpi-sub" id="k-sod-s">—</div>
+        </div>
+      </div>
+
+      <!-- Tabella utenti -->
+      <div class="card" style="margin-bottom: 14px">
+        <div class="card-hdr">
+          <h3>Utenti nel sistema</h3>
+          <span class="badge-live" id="utenti-badge">● LIVE</span>
+        </div>
+        <table class="utbl">
+          <thead>
+            <tr>
+              <th>Utente</th>
+              <th>Dipartimento</th>
+              <th>Account</th>
+              <th>MFA</th>
+              <th>Rischio</th>
+              <th>Tipo</th>
+              <th>Ultimo accesso</th>
+              <th>App assegnate</th>
+              <th>Azione rapida</th>
+            </tr>
+          </thead>
+          <tbody id="utenti-tbody">
+            <tr>
+              <td
+                colspan="9"
+                style="text-align: center; padding: 20px; color: var(--muted)"
+              >
+                Caricamento...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Feed + Risk bars -->
+      <div class="grid2">
+        <div class="card">
+          <div class="card-hdr">
+            <h3>Attività recente</h3>
+            <span class="badge-live">● LIVE</span>
+          </div>
+          <div id="feed">
+            <p style="color: var(--muted); font-size: 12px">
+              Nessuna attività ancora.<br />Prova uno scenario nella Chat.
+            </p>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px">
+          <div class="card">
+            <div class="card-hdr">
+              <h3>Distribuzione rischio operazioni</h3>
+            </div>
+            <div id="risk-bars">
+              <p style="color: var(--muted); font-size: 12px">
+                Nessuna operazione ancora.
+              </p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hdr">
+              <h3>Non-Human Identities</h3>
+              <span class="badge-warn" id="nhi-badge">Scansione...</span>
+            </div>
+            <div class="nhi-grid" id="nhi-grid">
+              <p
+                style="color: var(--muted); font-size: 12px; grid-column: 1/-1"
+              >
+                Caricamento...
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SoD + Ticket -->
+      <div class="grid2" style="margin-bottom: 14px">
+        <div class="card">
+          <div class="card-hdr">
+            <h3>SoD Conflict Detection</h3>
+            <span
+              id="sod-badge"
+              style="
+                font-size: 10px;
+                padding: 2px 8px;
+                border-radius: 8px;
+                background: var(--pl);
+                color: var(--pm);
+                margin-left: auto;
+              "
+              >Scansione...</span
+            >
+          </div>
+          <div id="sod-section">
+            <p style="color: var(--muted); font-size: 12px">Caricamento...</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hdr">
+            <h3>Ticket DL — Coda attiva</h3>
+            <a
+              href="/tickets.html"
+              style="
+                font-size: 11px;
+                color: var(--pm);
+                margin-left: auto;
+                text-decoration: none;
+              "
+              >Vedi tutti →</a
+            >
+          </div>
+          <div id="ticket-mini">
+            <p style="color: var(--muted); font-size: 12px">Caricamento...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Validazione -->
+      <div class="card">
+        <div class="card-hdr">
+          <h3>Approvazioni Richiesta Conferma pendenti</h3>
+          <span
+            id="val-badge"
+            style="
+              font-size: 10px;
+              background: var(--gl);
+              color: var(--g);
+              padding: 2px 8px;
+              border-radius: 8px;
+              margin-left: auto;
+            "
+            >0 in attesa</span
+          >
+        </div>
+        <div id="val-section">
+          <p
+            style="
+              color: var(--muted);
+              font-size: 12px;
+              text-align: center;
+              padding: 16px;
+            "
+          >
+            Nessuna approvazione pendente.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast-c" id="toasts"></div>
+
+    <script>
+      var prevVal = 0;
+      var prevDis = 0;
+
+      async function api(percorso) {
+        try {
+          return await (await fetch(percorso)).json();
+        } catch (e) {
+          console.error("API error:", percorso, e.message);
+          return null;
+        }
+      }
+      async function apiPost(percorso, corpo) {
+        try {
+          return await (
+            await fetch(percorso, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(corpo),
+            })
+          ).json();
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function tempoFa(iso) {
+        if (!iso) return "—";
+        var s = Math.floor((Date.now() - new Date(iso)) / 1000);
+        if (s < 60) return s + "s fa";
+        if (s < 3600) return Math.floor(s / 60) + "m fa";
+        return new Date(iso).toLocaleTimeString("it-IT", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      }
+
+      async function aggiorna() {
+        var dash = await api("/api/dashboard");
+        var users = await api("/api/users");
+        var nhi = await api("/api/nhi");
+        var val = await api("/api/validazione");
+        var sod = await api("/api/sod");
+        var tick = await api("/api/tickets");
+
+        if (!dash) {
+          document.getElementById("upd").textContent =
+            "Errore connessione — server avviato?";
+          return;
+        }
+        document.getElementById("upd").textContent =
+          "Aggiornato: " + new Date().toLocaleTimeString("it-IT");
+
+        // KPI — usa i campi in italiano restituiti dal server v3
+        var u = dash.utenti || {};
+        document.getElementById("k-tot").textContent = u.total || 0;
+        document.getElementById("k-tot-s").textContent =
+          (u.guest || 0) + " guest";
+        document.getElementById("k-att").textContent =
+          u.attivi || u.active || 0;
+        document.getElementById("k-dis").textContent =
+          u.disabilitati || u.disabled || 0;
+        document.getElementById("k-ris").textContent =
+          (u.altoRischio || u.highRisk || 0) +
+          (u.rischioMedio || u.mediumRisk || 0);
+        document.getElementById("k-mfa").textContent =
+          u.senzaMFA || u.noMFA || 0;
+
+        var op = dash.operazioni || dash.operations || {};
+        document.getElementById("k-val").textContent =
+          op.validazionePendente ||
+          op.pendingHITL ||
+          (val ? (val.in_attesa || []).length : 0);
+
+        var tk = dash.ticket || {};
+        document.getElementById("k-tk").textContent = tk.total || 0;
+        document.getElementById("k-tk-s").textContent =
+          (tk.oltreRgSla || 0) + " oltre SLA";
+
+        var sodD = dash.sod || {};
+        document.getElementById("k-sod").textContent =
+          sodD.conflitti_totali || sodD.total_conflicts || 0;
+        document.getElementById("k-sod-s").textContent =
+          (sodD.critici || sodD.critical || 0) + " CRITICAL";
+
+        // Toast per eventi nuovi
+        var curVal = val && val.in_attesa ? val.in_attesa.length : 0;
+        if (curVal > prevVal)
+          toast("Nuova Richiesta Conferma in attesa!", "toast-warn");
+        prevVal = curVal;
+        var curDis = u.disabilitati || 0;
+        if (curDis > prevDis && prevDis > 0)
+          toast("Account disabilitato automaticamente", "toast-warn");
+        prevDis = curDis;
+
+        // Tabella utenti
+        if (users && users.data) renderUtenti(users.data);
+
+        // Feed attività
+        renderFeed(dash.attivitaRecente || dash.recentActivity || []);
+
+        // Risk bars
+        renderRiskBars(
+          dash.distribuzioneRischio || dash.riskDistribution || {},
+        );
+
+        // NHI
+        if (nhi && nhi.data) renderNHI(nhi);
+
+        // SoD
+        if (sod) renderSoD(sod);
+
+        // Ticket
+        if (tick && tick.data) renderTicket(tick.data);
+
+        // Validazione
+        renderValidazione(val ? val.in_attesa || [] : []);
+      }
+
+      function renderUtenti(data) {
+        var html = "";
+        for (var i = 0; i < data.length; i++) {
+          var u = data[i];
+          var spill = u.accountEnabled
+            ? '<span class="pill p-ok">Attivo</span>'
+            : '<span class="pill p-dis">Disabilitato</span>';
+          var rpill;
+          if (u.riskLevel === "high")
+            rpill = '<span class="pill p-dis">' + u.riskLevel + "</span>";
+          else if (u.riskLevel === "medium")
+            rpill = '<span class="pill p-med">' + u.riskLevel + "</span>";
+          else
+            rpill =
+              '<span class="pill p-none">' +
+              (u.riskLevel || "none") +
+              "</span>";
+          var mfaIcon = u.mfaRegistered
+            ? '<span style="color:var(--g);font-size:14px">✓</span>'
+            : '<span style="color:var(--r);font-size:14px">✗</span>';
+          var tipoPill;
+          if (u.guestUser) tipoPill = '<span class="pill p-guest">Guest</span>';
+          else if (u.accountType === "synced-onprem")
+            tipoPill = '<span class="pill p-sync">Sync AD</span>';
+          else tipoPill = '<span class="pill p-cloud">Cloud</span>';
+          var apps = (u.appAssignments || []).length;
+          var ultimo = tempoFa(u.lastSignIn);
+          var azione = u.accountEnabled
+            ? '<button class="abtn" onclick="azioneRapida(\'' +
+              u.userPrincipalName +
+              "','disabilita')\">Disabilita</button>"
+            : '<button class="abtn" onclick="azioneRapida(\'' +
+              u.userPrincipalName +
+              "','abilita')\">Abilita</button>";
+          html +=
+            "<tr><td><strong>" +
+            u.displayName +
+            '</strong><br><span style="font-size:10px;color:#888">' +
+            u.userPrincipalName +
+            "</span></td>" +
+            '<td style="font-size:11px">' +
+            u.department +
+            "</td>" +
+            "<td>" +
+            spill +
+            "</td>" +
+            '<td style="text-align:center">' +
+            mfaIcon +
+            "</td>" +
+            "<td>" +
+            rpill +
+            "</td>" +
+            "<td>" +
+            tipoPill +
+            "</td>" +
+            '<td style="font-size:11px;color:#666">' +
+            ultimo +
+            "</td>" +
+            '<td style="font-size:11px;text-align:center">' +
+            apps +
+            "</td>" +
+            "<td>" +
+            azione +
+            "</td></tr>";
+        }
+        document.getElementById("utenti-tbody").innerHTML = html;
+      }
+
+      function renderFeed(items) {
+        if (!items || !items.length) {
+          document.getElementById("feed").innerHTML =
+            '<p style="color:var(--muted);font-size:12px">Nessuna attività. Esegui uno scenario nella Chat.</p>';
+          return;
+        }
+        var etichette = {
+          execution_complete: "Esecuzione completata",
+          conferma_approvata: "Richiesta Conferma approvata",
+          conferma_rifiutata: "Richiesta Conferma rifiutata",
+          hitl_approved: "Richiesta Conferma approvata",
+          hitl_rejected: "Richiesta Conferma rifiutata",
+        };
+        var html = "";
+        for (var i = 0; i < items.length; i++) {
+          var a = items[i];
+          var azione = a.azione || a.action || "—";
+          var lbl = etichette[azione] || a.step_label || azione;
+          var ris = a.risultato || a.result || "";
+          var dc =
+            ris === "success"
+              ? "fd-ok"
+              : ris === "failure"
+                ? "fd-fail"
+                : ris
+                  ? "fd-ev"
+                  : "fd-neu";
+          var rk = a.rischio || a.risk;
+          html +=
+            '<div class="feed-item"><div class="feed-dot ' +
+            dc +
+            '"></div>' +
+            '<div style="flex:1;min-width:0"><div class="feed-txt">' +
+            lbl +
+            "</div>" +
+            '<div class="feed-ora">' +
+            tempoFa(a.time || a.timestamp) +
+            "</div></div>" +
+            (rk
+              ? '<span class="feed-risk fr-' + rk + '">' + rk + "</span>"
+              : "") +
+            "</div>";
+        }
+        document.getElementById("feed").innerHTML = html;
+      }
+
+      function renderRiskBars(rd) {
+        var basso = rd.BASSO || rd.LOW || 0;
+        var medio = rd.MEDIO || rd.MEDIUM || 0;
+        var alto = rd.ALTO || rd.HIGH || 0;
+        var tot = basso + medio + alto;
+        if (!tot) {
+          document.getElementById("risk-bars").innerHTML =
+            '<p style="color:var(--muted);font-size:12px">Nessuna operazione ancora.</p>';
+          return;
+        }
+        var max = Math.max(basso, medio, alto) || 1;
+        document.getElementById("risk-bars").innerHTML =
+          '<div class="rbar-row"><span class="rbar-lbl">BASSO</span><div class="rbar-bg"><div class="rbar-fill rb-LOW" style="width:' +
+          Math.round((basso / max) * 100) +
+          '%"></div></div><span class="rbar-n">' +
+          basso +
+          "</span></div>" +
+          '<div class="rbar-row"><span class="rbar-lbl">MEDIO</span><div class="rbar-bg"><div class="rbar-fill rb-MEDIUM" style="width:' +
+          Math.round((medio / max) * 100) +
+          '%"></div></div><span class="rbar-n">' +
+          medio +
+          "</span></div>" +
+          '<div class="rbar-row"><span class="rbar-lbl">ALTO</span><div class="rbar-bg"><div class="rbar-fill rb-HIGH" style="width:' +
+          Math.round((alto / max) * 100) +
+          '%"></div></div><span class="rbar-n">' +
+          alto +
+          "</span></div>";
+      }
+
+      function renderNHI(nhi) {
+        var s = nhi.summary || {};
+        var badge = document.getElementById("nhi-badge");
+        badge.textContent = s.noOwner > 0 ? s.noOwner + " senza owner" : "OK";
+        badge.className = s.noOwner > 0 ? "badge-warn" : "badge-live";
+        var html = "";
+        for (var i = 0; i < nhi.data.length; i++) {
+          var n = nhi.data[i];
+          var cls = "nhi-" + (n.risk || "LOW").toLowerCase();
+          html +=
+            '<div class="nhi-item ' +
+            cls +
+            '"><div class="nhi-name">' +
+            n.displayName +
+            "</div>" +
+            '<div class="nhi-det">' +
+            n.type +
+            " · Owner: " +
+            (n.owner || '<span style="color:var(--r)">Nessuno</span>') +
+            "</div>" +
+            (n.issues && n.issues.length
+              ? '<div class="nhi-tags">' +
+                n.issues
+                  .map(function (i) {
+                    return '<span class="nhi-tag">' + i + "</span>";
+                  })
+                  .join("") +
+                "</div>"
+              : "") +
+            "</div>";
+        }
+        document.getElementById("nhi-grid").innerHTML = html;
+      }
+
+      function renderSoD(sod) {
+        var badge = document.getElementById("sod-badge");
+        var ar = sod.users_at_risk || 0;
+        badge.textContent =
+          ar > 0 ? ar + " utenti a rischio" : "Nessun conflitto";
+        badge.style.background = ar > 0 ? "var(--ol)" : "var(--gl)";
+        badge.style.color = ar > 0 ? "var(--o)" : "var(--g)";
+
+        if (!ar) {
+          document.getElementById("sod-section").innerHTML =
+            '<p style="color:var(--muted);font-size:12px">Nessun conflitto SoD rilevato.</p>';
+          return;
+        }
+
+        var cc = sod.critical_count || 0;
+        var hc = sod.high_count || 0;
+        var tc = sod.total_conflicts || 0;
+        var html =
+          '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">' +
+          '<div style="background:var(--rl);border-radius:7px;padding:10px;text-align:center"><div style="font-size:24px;font-weight:700;color:var(--r)">' +
+          cc +
+          '</div><div style="font-size:10px;color:var(--r);font-weight:600">CRITICAL</div></div>' +
+          '<div style="background:var(--al);border-radius:7px;padding:10px;text-align:center"><div style="font-size:24px;font-weight:700;color:var(--am)">' +
+          hc +
+          '</div><div style="font-size:10px;color:var(--am);font-weight:600">HIGH</div></div>' +
+          '<div style="background:var(--pl);border-radius:7px;padding:10px;text-align:center"><div style="font-size:24px;font-weight:700;color:var(--pm)">' +
+          tc +
+          '</div><div style="font-size:10px;color:var(--pm);font-weight:600">TOTALE</div></div>' +
+          "</div>";
+
+        var ar_list = sod.at_risk || [];
+        for (var i = 0; i < ar_list.length; i++) {
+          var u = ar_list[i];
+          var ini = (u.display_name || "")
+            .split(" ")
+            .map(function (n) {
+              return n[0] || "";
+            })
+            .join("");
+          html +=
+            '<div class="sod-item"><div class="sod-user"><div class="avatar">' +
+            ini +
+            "</div>" +
+            '<div><div style="font-weight:600;font-size:12px">' +
+            u.display_name +
+            "</div>" +
+            '<div style="font-size:10px;color:#888">' +
+            (u.department || "") +
+            ' · Score: <strong style="color:' +
+            (u.risk_score >= 40 ? "var(--r)" : "var(--am)") +
+            '">' +
+            u.risk_score +
+            "/100</strong></div></div></div>";
+          var confs = u.conflicts || [];
+          for (var j = 0; j < confs.length; j++) {
+            var c = confs[j];
+            var cls2 = c.severity === "CRITICAL" ? "sod-critical" : "sod-high";
+            html +=
+              '<div class="sod-conflict ' +
+              cls2 +
+              '">' +
+              '<div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">' +
+              '<span style="font-size:9px;font-weight:700;color:' +
+              (c.severity === "CRITICAL" ? "var(--r)" : "var(--am)") +
+              '">' +
+              c.severity +
+              "</span>" +
+              '<span style="font-size:11px;font-weight:600">' +
+              c.rule_name +
+              "</span>" +
+              '<span style="font-size:9px;color:#888;margin-left:auto">' +
+              (c.compliance || []).join(" · ") +
+              "</span></div>" +
+              '<div style="font-size:10px;color:#555">' +
+              c.recommended_action +
+              "</div></div>";
+          }
+          html += "</div>";
+        }
+        document.getElementById("sod-section").innerHTML = html;
+      }
+
+      function renderTicket(data) {
+        if (!data || !data.length) {
+          document.getElementById("ticket-mini").innerHTML =
+            '<p style="color:var(--muted);font-size:12px">Nessun ticket aperto.</p>';
+          return;
+        }
+        var now = new Date();
+        var html = "";
+        var max5 = data.slice(0, 5);
+        for (var i = 0; i < max5.length; i++) {
+          var t = max5[i];
+          var sla = t.slaDeadline ? new Date(t.slaDeadline) : null;
+          var diffH = sla ? Math.round((sla - now) / 3600000) : null;
+          var slaCls = "tk-sla-ok",
+            slaTxt = "";
+          if (diffH !== null) {
+            if (diffH < 0) {
+              slaCls = "tk-sla-breach";
+              slaTxt = "SLA scaduto " + Math.abs(diffH) + "h fa";
+            } else if (diffH < 4) {
+              slaCls = "tk-sla-warn";
+              slaTxt = "SLA tra " + diffH + "h";
+            } else
+              slaTxt =
+                "SLA: " +
+                sla.toLocaleTimeString("it-IT", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                });
+          }
+          html +=
+            '<div class="tk-mini" onclick="window.location.href=\'/tickets.html\'">' +
+            '<div style="display:flex;align-items:center;justify-content:space-between">' +
+            '<span class="tk-id">' +
+            t.id +
+            "</span>" +
+            '<span class="' +
+            slaCls +
+            '">' +
+            slaTxt +
+            "</span></div>" +
+            '<div class="tk-note">' +
+            (t.note || "").substring(0, 60) +
+            "...</div></div>";
+        }
+        html +=
+          '<div style="text-align:center;margin-top:8px"><a href="/tickets.html" style="font-size:11px;color:var(--pm)">Vedi tutti i ticket →</a></div>';
+        document.getElementById("ticket-mini").innerHTML = html;
+      }
+
+      function renderValidazione(pendenti) {
+        var badge = document.getElementById("val-badge");
+        badge.textContent = pendenti.length + " in attesa";
+        badge.style.background = pendenti.length ? "var(--ol)" : "var(--gl)";
+        badge.style.color = pendenti.length ? "var(--o)" : "var(--g)";
+
+        if (!pendenti.length) {
+          document.getElementById("val-section").innerHTML =
+            '<p style="color:var(--muted);font-size:12px;text-align:center;padding:16px">Nessuna approvazione pendente.</p>';
+          return;
+        }
+        var html = "";
+        for (var i = 0; i < pendenti.length; i++) {
+          var r = pendenti[i];
+          var min = Math.max(
+            0,
+            Math.floor((new Date(r.expiresAt) - new Date()) / 60000),
+          );
+          html +=
+            '<div class="val-item"><div class="val-title">🔔 ' +
+            ((r.step && r.step.label) || "Azione in attesa") +
+            "</div>" +
+            '<div style="font-size:11px;color:#666">Utente: <strong>' +
+            ((r.planContext && r.planContext.targetUser) || "—") +
+            "</strong>" +
+            " · Step " +
+            ((r.planContext && r.planContext.stepIndex) || "?") +
+            ' · Rischio: <strong style="color:var(--o)">' +
+            ((r.step && r.step.risk) || "—") +
+            "</strong>" +
+            "<br>Scade tra " +
+            min +
+            " minuti</div>" +
+            (r.step && r.step.params
+              ? '<div style="font-size:10px;background:#f5f5f5;padding:5px;border-radius:4px;margin-top:5px;font-family:monospace;max-height:50px;overflow:hidden">' +
+                JSON.stringify(r.step.params).substring(0, 150) +
+                "</div>"
+              : "") +
+            '<div class="val-btns"><button class="btn-approva" onclick="approva(\'' +
+            r.validationId +
+            "')\">✓ Approva</button>" +
+            '<button class="btn-rifiuta" onclick="rifiuta(\'' +
+            r.validationId +
+            "')\">✗ Rifiuta</button></div></div>";
+        }
+        document.getElementById("val-section").innerHTML = html;
+
+        // Popup se nuove
+        if (pendenti.length > prevVal) {
+          for (var x = prevVal; x < pendenti.length; x++) {
+            if (!document.getElementById("popup-" + pendenti[x].validationId))
+              mostraPopup(pendenti[x]);
+          }
+        }
+      }
+
+      function mostraPopup(r) {
+        var popup = document.createElement("div");
+        popup.id = "popup-" + r.validationId;
+        popup.className = "notifica-popup";
+        var min = Math.max(
+          0,
+          Math.floor((new Date(r.expiresAt) - new Date()) / 60000),
+        );
+        popup.innerHTML =
+          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:9px">' +
+          '<div class="popup-dot"></div>' +
+          '<span style="font-weight:700;font-size:12px;color:var(--o)">Richiesta Conferma</span>' +
+          "<button onclick=\"document.getElementById('popup-" +
+          r.validationId +
+          '\').remove()" style="margin-left:auto;background:none;border:none;font-size:18px;cursor:pointer;color:#888">×</button></div>' +
+          '<div style="font-size:12px;font-weight:600;margin-bottom:4px">' +
+          ((r.step && r.step.label) || "Azione in attesa") +
+          "</div>" +
+          '<div style="font-size:11px;color:#666">Utente: <strong>' +
+          ((r.planContext && r.planContext.targetUser) || "—") +
+          "</strong></div>" +
+          '<div style="font-size:11px;color:#666">Rischio: <strong style="color:var(--o)">' +
+          ((r.step && r.step.risk) || "—") +
+          "</strong> · Scade tra " +
+          min +
+          " min</div>" +
+          '<div style="display:flex;gap:7px;margin-top:10px">' +
+          "<button onclick=\"approvaPopup('" +
+          r.validationId +
+          '\',this)" style="flex:1;background:var(--g);color:white;border:none;padding:7px;border-radius:7px;cursor:pointer;font-size:11px;font-weight:600">✓ Approva</button>' +
+          "<button onclick=\"rifiutaPopup('" +
+          r.validationId +
+          '\',this)" style="flex:1;background:var(--r);color:white;border:none;padding:7px;border-radius:7px;cursor:pointer;font-size:11px;font-weight:600">✗ Rifiuta</button></div>';
+        document.body.appendChild(popup);
+        setTimeout(
+          function () {
+            var p = document.getElementById("popup-" + r.validationId);
+            if (p) p.remove();
+          },
+          25 * 60 * 1000,
+        );
+      }
+
+      async function approva(id) {
+        await apiPost("/api/validazione/" + id + "/approva", {
+          operatore: "operatore",
+        });
+        toast("Azione approvata", "toast-ok");
+        setTimeout(aggiorna, 800);
+      }
+      async function rifiuta(id) {
+        var motivo = prompt("Motivo del rifiuto:") || "Rifiutato";
+        await apiPost("/api/validazione/" + id + "/rifiuta", {
+          motivo: motivo,
+          operatore: "operatore",
+        });
+        toast("Azione rifiutata", "toast-warn");
+        setTimeout(aggiorna, 800);
+      }
+      async function approvaPopup(id, btn) {
+        btn.closest('[id^="popup-"]').style.borderColor = "var(--g)";
+        await apiPost("/api/validazione/" + id + "/approva", {
+          operatore: "operatore",
+        });
+        setTimeout(function () {
+          var p = document.getElementById("popup-" + id);
+          if (p) p.remove();
+        }, 1000);
+        setTimeout(aggiorna, 1200);
+      }
+      async function rifiutaPopup(id, btn) {
+        var motivo = prompt("Motivo:") || "Rifiutato";
+        btn.closest('[id^="popup-"]').style.borderColor = "var(--r)";
+        await apiPost("/api/validazione/" + id + "/rifiuta", {
+          motivo: motivo,
+          operatore: "operatore",
+        });
+        setTimeout(function () {
+          var p = document.getElementById("popup-" + id);
+          if (p) p.remove();
+        }, 1000);
+        setTimeout(aggiorna, 1200);
+      }
+
+      async function azioneRapida(upn, tipo) {
+        if (!confirm(tipo + " account " + upn + "?")) return;
+        var msg =
+          tipo === "disabilita"
+            ? "Disabilita account " + upn
+            : "Abilita account " + upn;
+        await apiPost("/api/chat", { message: msg });
+        toast("Richiesta inviata per " + upn, "toast-ok");
+        setTimeout(aggiorna, 1500);
+      }
+
+      function toast(msg, cls) {
+        var c = document.getElementById("toasts");
+        var t = document.createElement("div");
+        t.className = "toast " + (cls || "");
+        t.textContent = msg;
+        c.appendChild(t);
+        setTimeout(function () {
+          t.style.animation = "slideIn .2s ease reverse";
+          setTimeout(function () {
+            t.remove();
+          }, 200);
+        }, 3500);
+      }
+
+      aggiorna();
+      setInterval(aggiorna, 5000);
+    </script>
+  </body>
+</html>

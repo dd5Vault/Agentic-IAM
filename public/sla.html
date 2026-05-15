@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Agentic IAM — Metriche SLA</title>
+<style>
+:root{--p:#3D0070;--pm:#7B00D4;--pl:#f3e8ff;--t:#0D6E8A;--tl:#e0f2f7;--o:#E8720C;--ol:#fff3e0;--r:#B91C1C;--rl:#fee2e2;--g:#1A7A4A;--gl:#d1fae5;--am:#92400E;--al:#fef3c7;--border:#e0e0e0;--text:#1a1a1a;--muted:#666;--gray:#f5f5f7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f0f5;color:var(--text)}
+nav{background:var(--p);color:white;display:flex;align-items:center;padding:0 22px;height:54px;gap:14px}
+nav h1{font-size:16px;font-weight:600}
+.nl{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+.nl a{color:rgba(255,255,255,.75);text-decoration:none;padding:5px 10px;border-radius:6px;font-size:11px;transition:background .15s}
+.nl a:hover,.nl a.active{background:rgba(255,255,255,.2);color:white}
+.page{max-width:1200px;margin:0 auto;padding:22px}
+.hdr{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.hdr h2{font-size:18px;font-weight:600}
+.sub{font-size:12px;color:var(--muted);margin-left:auto}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:20px}
+.kpi{background:white;border:0.5px solid var(--border);border-radius:10px;padding:16px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:10px 10px 0 0}
+.kp::before{background:var(--pm)} .kg::before{background:var(--g)} .kr::before{background:var(--r)} .ko::before{background:var(--o)} .kt::before{background:var(--t)}
+.kpi-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.kpi-val{font-size:30px;font-weight:700}
+.kp .kpi-val{color:var(--pm)} .kg .kpi-val{color:var(--g)} .kr .kpi-val{color:var(--r)} .ko .kpi-val{color:var(--o)} .kt .kpi-val{color:var(--t)}
+.kpi-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.card{background:white;border:0.5px solid var(--border);border-radius:10px;padding:18px}
+.card-hdr{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.card-hdr h3{font-size:13px;font-weight:600}
+.badge{font-size:10px;padding:2px 8px;border-radius:8px;margin-left:auto}
+.b-ok{background:var(--gl);color:var(--g)} .b-w{background:var(--ol);color:var(--o)} .b-r{background:var(--rl);color:var(--r)}
+.chart-wrap{position:relative;height:220px}
+.tkrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border)}
+.tkrow:last-child{border-bottom:none}
+.tk-id{font-size:11px;font-weight:700;color:var(--pm);min-width:72px}
+.tk-note{font-size:11px;flex:1;color:var(--text)}
+.tk-sla{font-size:10px;font-weight:600;min-width:120px;text-align:right}
+.sla-ok-t{color:var(--g)} .sla-w-t{color:var(--o)} .sla-b-t{color:var(--r)}
+.countdown-bar{height:6px;border-radius:3px;margin-top:4px;background:var(--border);overflow:hidden}
+.cb-fill{height:100%;border-radius:3px;transition:width .5s}
+.cb-ok{background:var(--g)} .cb-w{background:var(--o)} .cb-br{background:var(--r)}
+.rg-item{border:0.5px solid var(--border);border-radius:7px;padding:11px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.rg-status{font-size:10px;font-weight:600;padding:2px 8px;border-radius:8px}
+.rg-s-ps{background:var(--ol);color:var(--o)} .rg-s-ok{background:var(--gl);color:var(--g)}
+.mttr-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.mttr-lbl{font-size:12px;min-width:160px;font-weight:500}
+.mttr-bars{flex:1}
+.mttr-bar-bg{background:var(--gray);border-radius:4px;height:10px;overflow:hidden;margin-bottom:3px}
+.mttr-bar-fill{height:100%;border-radius:4px}
+.mttr-val{font-size:11px;color:var(--muted);text-align:right;min-width:80px}
+.before{background:#d1d5db} .after{background:var(--g)}
+.delta{font-size:10px;font-weight:700;color:var(--g);background:var(--gl);padding:1px 6px;border-radius:6px;min-width:50px;text-align:center}
+.full{grid-column:1/-1}
+</style>
+</head>
+<body>
+<nav>
+  <div style="font-size:17px">🛡️</div>
+  <h1>Agentic IAM v3.0</h1>
+  <div class="nl">
+    <a href="/">Chat</a>
+    <a href="/dashboard.html">Dashboard</a>
+    <a href="/tickets.html">Ticket DL</a>
+    <a href="/sla.html" class="active">Metriche SLA</a>
+    <a href="/apps.html">Catalogo App</a>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="hdr">
+    <h2>📊 Metriche SLA e Performance DL</h2>
+    <span class="sub" id="last-upd">Caricamento...</span>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi kp"><div class="kpi-lbl">Ticket aperti</div><div class="kpi-val" id="k-tot">—</div><div class="kpi-sub">totale in coda DL</div></div>
+    <div class="kpi kr"><div class="kpi-lbl">Oltre SLA</div><div class="kpi-val" id="k-sla-br">—</div><div class="kpi-sub">target: 8h lavorative</div></div>
+    <div class="kpi ko"><div class="kpi-lbl">In scadenza</div><div class="kpi-val" id="k-sla-near">—</div><div class="kpi-sub">entro le prossime 4h</div></div>
+    <div class="kpi kg"><div class="kpi-lbl">In target SLA</div><div class="kpi-val" id="k-sla-ok">—</div><div class="kpi-sub">nei tempi previsti</div></div>
+    <div class="kpi kt"><div class="kpi-lbl">Workflow autorizzazione RA</div><div class="kpi-val" id="k-rg">—</div><div class="kpi-sub">in corso o completati</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-hdr"><h3>MTTR per categoria — Prima vs Dopo Copilota</h3></div>
+      <div id="mttr-section">Caricamento...</div>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><h3>Trend settimanale MTTR (min)</h3><span class="badge b-ok">ultimi 4 settimane</span></div>
+      <div class="chart-wrap"><canvas id="chart-trend"></canvas></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-hdr"><h3>Ticket DL — Stato SLA in tempo reale</h3><span class="badge" id="sla-badge">—</span></div>
+      <div id="ticket-sla-list">Caricamento...</div>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><h3>Workflow autorizzazione RA attivi</h3></div>
+      <div id="rg-list"><p style="color:var(--muted);font-size:12px">Nessun workflow autorizzazione RA in corso.<br>Si avviano automaticamente quando il Copilota rileva un modulo mancante.</p></div>
+      <div style="margin-top:12px;border-top:0.5px solid var(--border);padding-top:12px">
+        <button onclick="simulaRGWorkflow()" style="background:var(--pm);color:white;border:none;padding:8px 16px;border-radius:7px;cursor:pointer;font-size:11px;font-weight:600;width:100%">+ Simula avvio workflow autorizzazione RA</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card full">
+    <div class="card-hdr"><h3>Volume ticket per settimana — distribuzione per tipo</h3></div>
+    <div class="chart-wrap" style="height:180px"><canvas id="chart-volume"></canvas></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+let chartTrend = null, chartVolume = null;
+
+async function load() {
+  const [sla, tickets] = await Promise.all([
+    fetch('/api/sla').then(r=>r.json()).catch(()=>null),
+    fetch('/api/tickets').then(r=>r.json()).catch(()=>null)
+  ]);
+  if (!sla || !tickets) return;
+  document.getElementById('last-upd').textContent = 'Aggiornato: ' + new Date().toLocaleTimeString('it-IT');
+
+  document.getElementById('k-tot').textContent      = tickets.total;
+  document.getElementById('k-sla-br').textContent   = sla.tickets.overSLA;
+  document.getElementById('k-sla-near').textContent = sla.tickets.nearSLA;
+  document.getElementById('k-sla-ok').textContent   = sla.tickets.inSLA;
+  document.getElementById('k-rg').textContent       = sla.raWorkflows?.length || 0;
+
+  renderMTTR();
+  renderTicketSLA(tickets.data, sla.tickets);
+  renderTrendChart(sla.historicalMTTR);
+  renderVolumeChart(sla.historicalMTTR);
+  renderRGWorkflows(sla.raWorkflows || []);
+}
+
+function renderMTTR() {
+  const dati = [
+    { cat:'Abilitazione app', prima:42, dopo:9 },
+    { cat:'Reset password',   prima:18, dopo:4 },
+    { cat:'Creazione utenza', prima:65, dopo:14 },
+    { cat:'Troubleshoot app', prima:55, dopo:11 },
+    { cat:'Redirect PIM',     prima:12, dopo:3 }
+  ];
+  const maxVal = Math.max(...dati.map(d => d.prima));
+  document.getElementById('mttr-section').innerHTML = dati.map(d => {
+    const delta = Math.round((1 - d.dopo / d.prima) * 100);
+    return `<div class="mttr-row">
+      <div class="mttr-lbl">${d.cat}</div>
+      <div class="mttr-bars">
+        <div class="mttr-bar-bg"><div class="mttr-bar-fill before" style="width:${Math.round(d.prima/maxVal*100)}%"></div></div>
+        <div class="mttr-bar-bg"><div class="mttr-bar-fill after" style="width:${Math.round(d.dopo/maxVal*100)}%"></div></div>
+      </div>
+      <div class="mttr-val">${d.prima}m → ${d.dopo}m</div>
+      <div class="delta">-${delta}%</div>
+    </div>`;
+  }).join('') + `<div style="display:flex;gap:14px;margin-top:10px;font-size:10px;color:var(--muted)"><span><span style="display:inline-block;width:10px;height:6px;background:#d1d5db;border-radius:2px;margin-right:4px"></span>Prima del Copilota</span><span><span style="display:inline-block;width:10px;height:6px;background:var(--g);border-radius:2px;margin-right:4px"></span>Con Copilota</span></div>`;
+}
+
+function renderTicketSLA(ticketData, slaInfo) {
+  const now  = new Date();
+  const badge = document.getElementById('sla-badge');
+  badge.textContent = slaInfo.overSLA > 0 ? slaInfo.overSLA + ' oltre SLA' : 'Tutti in target';
+  badge.className   = 'badge ' + (slaInfo.overSLA > 0 ? 'b-r' : 'b-ok');
+
+  document.getElementById('ticket-sla-list').innerHTML = ticketData.map(t => {
+    const sla    = t.slaDeadline ? new Date(t.slaDeadline) : null;
+    const diffMs = sla ? sla - now : null;
+    const diffH  = diffMs !== null ? Math.floor(diffMs / 3600000) : null;
+    const diffM  = diffMs !== null ? Math.floor((diffMs % 3600000) / 60000) : null;
+    const pct    = sla ? Math.max(0, Math.min(100, Math.round(diffMs / (8 * 3600000) * 100))) : 100;
+    let slaClass = 'sla-ok-t', barClass = 'cb-ok', slaText = 'In target';
+    if (diffMs !== null && diffMs < 0)         { slaClass = 'sla-b-t'; barClass = 'cb-br'; slaText = 'Oltre SLA ' + Math.abs(diffH) + 'h'; }
+    else if (diffMs !== null && diffH < 4)     { slaClass = 'sla-w-t'; barClass = 'cb-w';  slaText = diffH + 'h ' + diffM + 'm rimanenti'; }
+    else if (diffMs !== null)                  { slaText = diffH + 'h rimanenti'; }
+    return `<div class="tkrow">
+      <span class="tk-id">${t.id}</span>
+      <div class="tk-note">${t.note?.substring(0,50) || '—'}...</div>
+      <div>
+        <div class="tk-sla ${slaClass}">${slaText}</div>
+        <div class="countdown-bar"><div class="cb-fill ${barClass}" style="width:${pct}%"></div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderTrendChart(historical) {
+  const byWeek = {};
+  historical.forEach(r => { if (!byWeek[r.week]) byWeek[r.week] = {}; byWeek[r.week][r.category] = r.avg_minutes; });
+  const weeks = Object.keys(byWeek).sort();
+  const labels = weeks.map(w => 'W' + w.split('-W')[1]);
+  const dsApp  = weeks.map(w => byWeek[w].app_enablement || 0);
+  const dsPwd  = weeks.map(w => byWeek[w].password_reset || 0);
+  const dsUsr  = weeks.map(w => byWeek[w].user_creation || 0);
+
+  if (chartTrend) chartTrend.destroy();
+  const ctx = document.getElementById('chart-trend').getContext('2d');
+  chartTrend = new Chart(ctx, { type: 'line', data: { labels, datasets: [
+    { label: 'Abilitazioni app', data: dsApp, borderColor: '#7B00D4', backgroundColor: '#f3e8ff', tension: .4, fill: false, pointRadius: 4 },
+    { label: 'Reset password',   data: dsPwd, borderColor: '#1A7A4A', backgroundColor: '#d1fae5', tension: .4, fill: false, pointRadius: 4 },
+    { label: 'Creazione utenza', data: dsUsr, borderColor: '#E8720C', backgroundColor: '#fff3e0', tension: .4, fill: false, pointRadius: 4 }
+  ]}, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'Minuti', font: { size: 10 } }, ticks: { font: { size: 10 } } }, x: { ticks: { font: { size: 10 } } } } } });
+}
+
+function renderVolumeChart(historical) {
+  const byWeek = {};
+  historical.forEach(r => { if (!byWeek[r.week]) byWeek[r.week] = {}; byWeek[r.week][r.category] = (byWeek[r.week][r.category] || 0) + r.tickets; });
+  const weeks  = Object.keys(byWeek).sort();
+  const labels = weeks.map(w => 'Settimana ' + w.split('-W')[1]);
+
+  if (chartVolume) chartVolume.destroy();
+  const ctx = document.getElementById('chart-volume').getContext('2d');
+  chartVolume = new Chart(ctx, { type: 'bar', data: { labels, datasets: [
+    { label: 'Abilitazioni app', data: weeks.map(w => byWeek[w].app_enablement || 0), backgroundColor: '#f3e8ff', borderColor: '#7B00D4', borderWidth: 1.5 },
+    { label: 'Reset password',   data: weeks.map(w => byWeek[w].password_reset || 0), backgroundColor: '#d1fae5', borderColor: '#1A7A4A', borderWidth: 1.5 },
+    { label: 'Creazione utenza', data: weeks.map(w => byWeek[w].user_creation || 0),  backgroundColor: '#fff3e0', borderColor: '#E8720C', borderWidth: 1.5 }
+  ]}, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } }, scales: { x: { stacked: true, ticks: { font: { size: 10 } } }, y: { stacked: true, beginAtZero: true, ticks: { font: { size: 10 } } } } } });
+}
+
+function renderRGWorkflows(workflows) {
+  const list = document.getElementById('rg-list');
+  if (!workflows.length) { list.innerHTML = '<p style="color:var(--muted);font-size:12px">Nessun workflow autorizzazione RA in corso.</p>'; return; }
+  list.innerHTML = workflows.map(wf => {
+    const sc = wf.stato === 'ra_confermato' ? 'rg-s-ok' : 'rg-s-ps';
+    const st = wf.stato === 'ra_confermato' ? 'RA Confermato' : 'Promemoria inviato';
+    return `<div class="rg-item">
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600">${wf.app || '—'} — ${wf.richiedente || '—'}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">Avviato: ${new Date(wf.avviatoAl).toLocaleString('it-IT')}</div>
+      </div>
+      <span class="rg-status ${sc}">${st}</span>
+      ${wf.stato !== 'ra_confermato' ? `<button onclick="confermaRG('${wf.id}')" style="background:var(--g);color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;font-size:10px;font-weight:600">✓ Conferma RA</button>` : ''}
+    </div>`;
+  }).join('');
+}
+
+async function simulaRGWorkflow() {
+  await fetch('/api/resp-app/avvia', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ ticketId:'TK-'+Math.floor(Math.random()*9000+1000), richiedente:'utente.test@demo.local', app:'ERPCORE', profile:'ERPCORE-ADV' }) });
+  load();
+}
+
+async function confermaRG(wfId) {
+  await fetch('/api/resp-app/conferma', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ workflowId: wfId }) });
+  load();
+}
+
+load();
+setInterval(load, 8000);
+</script>
+</body>
+</html>

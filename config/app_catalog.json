@@ -1,0 +1,119 @@
+{
+  "applications": [
+    {
+      "id": "app-erpcore-001", "name": "ERPCORE", "displayName": "ERPCORE — Enterprise Resource Planning Core",
+      "platform": "Azure", "type": "EnterpriseApp", "entitlementId": "ent-erpcore",
+      "availableProfiles": [
+        { "id": "ERPCORE-RO",  "name": "ReadOnly",  "description": "Sola lettura su tutti i moduli",               "riskLevel": "LOW" },
+        { "id": "ERPCORE-STD", "name": "Standard",  "description": "Operativo standard, no approvazioni",           "riskLevel": "LOW" },
+        { "id": "ERPCORE-ADV", "name": "Advanced",  "description": "Include modulo approvazioni e reporting",       "riskLevel": "MEDIUM" },
+        { "id": "ERPCORE-ADM", "name": "Admin",     "description": "Amministratore applicativo completo",           "riskLevel": "HIGH" }
+      ],
+      "authorizationRequired": true, "respAppRequired": true, "ownerTeam": "Team_BusinessApps",
+      "ssoProtocol": "SAML", "source": "EntraID-Connected"
+    },
+    {
+      "id": "app-orderhub-002", "name": "ORDERHUB", "displayName": "ORDERHUB — Order Management Hub",
+      "platform": "Azure", "type": "EnterpriseApp", "entitlementId": "ent-orderhub",
+      "availableProfiles": [
+        { "id": "ORDERHUB-RO",  "name": "ReadOnly",  "description": "Consultazione ordini",             "riskLevel": "LOW" },
+        { "id": "ORDERHUB-OPE", "name": "Operator",  "description": "Inserimento e gestione ordini",    "riskLevel": "LOW" },
+        { "id": "ORDERHUB-MGR", "name": "Manager",   "description": "Approvazione ordini e reportistica","riskLevel": "MEDIUM" },
+        { "id": "ORDERHUB-ADM", "name": "Admin",     "description": "Configurazione sistema",            "riskLevel": "HIGH" }
+      ],
+      "authorizationRequired": true, "respAppRequired": true, "ownerTeam": "Team_SupplyChain",
+      "ssoProtocol": "OIDC", "source": "EntraID-Connected"
+    },
+    {
+      "id": "app-authforms-003", "name": "AUTHFORMS", "displayName": "AUTHFORMS — Authorization Forms Platform",
+      "platform": "Azure", "type": "EnterpriseApp", "entitlementId": "ent-authforms",
+      "availableProfiles": [
+        { "id": "AUTHFORMS-COMP", "name": "Compilatore", "description": "Compilazione moduli autorizzativi",  "riskLevel": "LOW" },
+        { "id": "AUTHFORMS-APP",  "name": "Approvatore", "description": "Approvazione moduli in workflow",    "riskLevel": "MEDIUM" },
+        { "id": "AUTHFORMS-ADM",  "name": "Admin",       "description": "Gestione workflow e template",       "riskLevel": "HIGH" }
+      ],
+      "authorizationRequired": true, "respAppRequired": false, "ownerTeam": "Team_Compliance",
+      "ssoProtocol": "SAML", "source": "EntraID-Connected"
+    },
+    {
+      "id": "app-netops-004", "name": "NETOPS", "displayName": "NETOPS — Operations Network Platform",
+      "platform": "Azure", "type": "EnterpriseApp", "entitlementId": "ent-netops",
+      "availableProfiles": [
+        { "id": "NETOPS-VIEW", "name": "Viewer",   "description": "Dashboard e monitoring read-only",    "riskLevel": "LOW" },
+        { "id": "NETOPS-OPE",  "name": "Operator", "description": "Operatività rete",                    "riskLevel": "MEDIUM" },
+        { "id": "NETOPS-ADM",  "name": "Admin",    "description": "Configurazione e provisioning rete",  "riskLevel": "HIGH" }
+      ],
+      "authorizationRequired": true, "respAppRequired": true, "ownerTeam": "Team_NetworkOps",
+      "ssoProtocol": "SAML", "source": "EntraID-Connected"
+    },
+    {
+      "id": "app-netmon-005", "name": "NETMON", "displayName": "NETMON — Network Equipment Monitoring",
+      "platform": "Azure", "type": "EnterpriseApp", "entitlementId": "ent-netmon",
+      "availableProfiles": [
+        { "id": "NETMON-RO",  "name": "ReadOnly",  "description": "Monitoring passivo",     "riskLevel": "LOW" },
+        { "id": "NETMON-OPE", "name": "Operator",  "description": "Operazioni e ticket",    "riskLevel": "LOW" },
+        { "id": "NETMON-ADM", "name": "Admin",     "description": "Configurazione asset",   "riskLevel": "HIGH" }
+      ],
+      "authorizationRequired": true, "respAppRequired": false, "ownerTeam": "Team_NetworkOps",
+      "ssoProtocol": "OIDC", "source": "EntraID-Connected"
+    },
+    {
+      "id": "app-workflow-006", "name": "WORKFLOW", "displayName": "WORKFLOW — Workflow & Resource Allocation",
+      "platform": "Azure", "type": "EnterpriseApp", "entitlementId": "ent-workflow",
+      "availableProfiles": [
+        { "id": "WORKFLOW-USER", "name": "User",    "description": "Accesso standard workflow",   "riskLevel": "LOW" },
+        { "id": "WORKFLOW-MGMT", "name": "Manager", "description": "Gestione team e risorse",     "riskLevel": "MEDIUM" },
+        { "id": "WORKFLOW-ADM",  "name": "Admin",   "description": "Configurazione workflow",     "riskLevel": "HIGH" }
+      ],
+      "authorizationRequired": true, "respAppRequired": true, "ownerTeam": "Team_PMO",
+      "ssoProtocol": "SAML", "source": "EntraID-Connected"
+    },
+    {
+      "id": "app-quality-007", "name": "QUALITY", "displayName": "QUALITY — Quality Control System",
+      "platform": "Azure", "type": "EnterpriseApp", "entitlementId": "ent-quality",
+      "availableProfiles": [
+        { "id": "QUALITY-AUD", "name": "Auditor",  "description": "Consultazione audit trail",         "riskLevel": "LOW" },
+        { "id": "QUALITY-OPE", "name": "Operator", "description": "Inserimento non conformità",         "riskLevel": "LOW" },
+        { "id": "QUALITY-APP", "name": "Approver", "description": "Approvazione azioni correttive",     "riskLevel": "MEDIUM" },
+        { "id": "QUALITY-ADM", "name": "Admin",    "description": "Configurazione checklist e workflow","riskLevel": "HIGH" }
+      ],
+      "authorizationRequired": true, "respAppRequired": false, "ownerTeam": "Team_Quality",
+      "ssoProtocol": "SAML", "source": "EntraID-Connected"
+    },
+    {
+      "id": "app-joborder-008", "name": "JOBORDER", "displayName": "JOBORDER — Job Order Processing",
+      "platform": "Azure", "type": "EnterpriseApp", "entitlementId": "ent-joborder",
+      "availableProfiles": [
+        { "id": "JOBORDER-RO",  "name": "ReadOnly",  "description": "Consultazione job order",      "riskLevel": "LOW" },
+        { "id": "JOBORDER-OPE", "name": "Operator",  "description": "Creazione e gestione job",     "riskLevel": "LOW" },
+        { "id": "JOBORDER-MGR", "name": "Manager",   "description": "Approvazione e chiusura",      "riskLevel": "MEDIUM" }
+      ],
+      "authorizationRequired": true, "respAppRequired": true, "ownerTeam": "Team_Operations",
+      "ssoProtocol": "OIDC", "source": "EntraID-Connected"
+    },
+    {
+      "id": "app-webportal-009", "name": "WEBPORTAL", "displayName": "WEBPORTAL — Web Portal",
+      "platform": "Azure", "type": "EnterpriseApp", "entitlementId": "ent-webportal",
+      "availableProfiles": [
+        { "id": "WEBPORTAL-USER", "name": "User",  "description": "Accesso portale standard",    "riskLevel": "LOW" },
+        { "id": "WEBPORTAL-ADM",  "name": "Admin", "description": "Gestione contenuti e utenti", "riskLevel": "HIGH" }
+      ],
+      "authorizationRequired": false, "respAppRequired": false, "ownerTeam": "Team_DigitalWorkspace",
+      "ssoProtocol": "OIDC", "source": "EntraID-Connected"
+    }
+  ],
+  "respAppProcess": {
+    "description": "Processo autorizzativo per abilitazioni applicative — Responsabile Applicativo (RA)",
+    "steps": [
+      "1. Il richiedente compila il modulo di autorizzazione su AUTHFORMS",
+      "2. Il Responsabile Applicativo (RA) approva entro 3 giorni lavorativi",
+      "3. Il modulo approvato viene inviato al Team IAM tramite ticket ServiceNow",
+      "4. Il Team IAM verifica identità madre su Entra ID",
+      "5. Il Team IAM esegue l'abilitazione e notifica via email il richiedente e il RA"
+    ],
+    "requiredFor":    ["ERPCORE", "ORDERHUB", "NETOPS", "WORKFLOW", "JOBORDER"],
+    "notRequiredFor": ["AUTHFORMS", "NETMON", "QUALITY", "WEBPORTAL"],
+    "slaHours": 8,
+    "escalationAfterHours": 24
+  }
+}

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Agentic IAM — Ticket DL</title>
+<style>
+:root{--p:#3D0070;--pm:#7B00D4;--pl:#f3e8ff;--t:#0D6E8A;--tl:#e0f2f7;--o:#E8720C;--ol:#fff3e0;--r:#B91C1C;--rl:#fee2e2;--g:#1A7A4A;--gl:#d1fae5;--am:#92400E;--al:#fef3c7;--border:#e0e0e0;--text:#1a1a1a;--muted:#666;--gray:#f5f5f7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f0f5;color:var(--text)}
+nav{background:var(--p);color:white;display:flex;align-items:center;padding:0 22px;height:54px;gap:18px}
+nav h1{font-size:16px;font-weight:600}
+.nl{display:flex;gap:4px;margin-left:auto}
+.nl a{color:rgba(255,255,255,.75);text-decoration:none;padding:5px 13px;border-radius:6px;font-size:12px;transition:background .15s}
+.nl a:hover,.nl a.active{background:rgba(255,255,255,.18);color:white}
+.page{max-width:1100px;margin:0 auto;padding:22px}
+.page-hdr{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.page-hdr h2{font-size:18px;font-weight:600}
+.last-upd{font-size:11px;color:var(--muted);margin-left:auto}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
+.stat{background:white;border:0.5px solid var(--border);border-radius:10px;padding:14px 16px}
+.stat-label{font-size:11px;color:var(--muted);margin-bottom:6px}
+.stat-val{font-size:28px;font-weight:700}
+.s-tot{color:var(--pm)} .s-app{color:var(--t)} .s-usr{color:var(--g)} .s-pwd{color:var(--am)} .s-sla{color:var(--r)}
+.filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.filter-btn{background:white;border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer;transition:all .15s;color:var(--text)}
+.filter-btn:hover,.filter-btn.active{background:var(--pm);color:white;border-color:var(--pm)}
+.tickets-grid{display:flex;flex-direction:column;gap:10px}
+.ticket{background:white;border:0.5px solid var(--border);border-radius:10px;padding:16px;transition:box-shadow .15s}
+.ticket:hover{box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.ticket.sla-breach{border-left:4px solid var(--r)}
+.ticket.sla-warning{border-left:4px solid var(--o)}
+.ticket.ok{border-left:4px solid var(--g)}
+.tk-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.tk-id{font-size:12px;font-weight:700;color:var(--pm)}
+.tk-type{font-size:10px;font-weight:600;padding:2px 8px;border-radius:8px}
+.type-app{background:var(--tl);color:var(--t)}
+.type-user{background:var(--gl);color:var(--g)}
+.type-pwd{background:var(--al);color:var(--am)}
+.type-pim{background:var(--pl);color:var(--pm)}
+.type-trouble{background:#f0f0f0;color:#555}
+.tk-sla{margin-left:auto;font-size:11px;font-weight:600}
+.sla-ok{color:var(--g)} .sla-warn{color:var(--o)} .sla-breach{color:var(--r)}
+.tk-body{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+.tk-field label{font-size:10px;color:var(--muted);display:block;margin-bottom:2px}
+.tk-field span{font-size:12px;font-weight:500}
+.tk-note{font-size:12px;color:#555;background:var(--gray);padding:8px 10px;border-radius:6px;margin-bottom:10px}
+.tk-actions{display:flex;gap:8px}
+.tk-btn{border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;transition:opacity .15s}
+.tk-btn:hover{opacity:.85}
+.btn-primary{background:var(--pm);color:white}
+.btn-secondary{background:var(--gray);color:var(--text);border:1px solid var(--border)}
+.btn-danger{background:var(--r);color:white}
+.btn-warn{background:var(--o);color:white}
+.status-pill{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:8px}
+.sp-pending{background:var(--al);color:var(--am)}
+.sp-investigating{background:var(--tl);color:var(--t)}
+.sp-pending_rg{background:var(--rl);color:var(--r)}
+.sp-pending_verification{background:var(--ol);color:var(--o)}
+.sp-wrong_queue{background:var(--pl);color:var(--pm)}
+.sp-completed{background:var(--gl);color:var(--g)}
+.empty{text-align:center;padding:40px;color:var(--muted);font-size:13px}
+.toast-c{position:fixed;bottom:22px;right:22px;display:flex;flex-direction:column;gap:7px;z-index:999}
+.toast{background:var(--text);color:white;padding:11px 16px;border-radius:9px;font-size:12px;display:flex;align-items:center;gap:9px;animation:si .2s ease;min-width:240px}
+.toast.success{background:var(--g)} .toast.warning{background:var(--o)} .toast.error{background:var(--r)}
+@keyframes si{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
+</style>
+</head>
+<body>
+<nav>
+  <div style="font-size:17px">🛡️</div>
+  <h1>Agentic IAM v2.0</h1>
+  <div class="nl">
+    <a href="/">Chat</a>
+    <a href="/dashboard.html">Dashboard</a>
+    <a href="/tickets.html" class="active">Ticket DL</a>
+    <a href="/sla.html" class="nav-link">Metriche SLA</a>
+    <a href="/apps.html" class="nav-link">Catalogo App</a>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="page-hdr">
+    <h2>📂 Ticket DL in gestione</h2>
+    <span class="last-upd" id="last-upd">Caricamento...</span>
+  </div>
+
+  <div class="stats" id="stats">
+    <div class="stat"><div class="stat-label">Totale aperti</div><div class="stat-val s-tot" id="s-tot">—</div></div>
+    <div class="stat"><div class="stat-label">Abilitazioni app</div><div class="stat-val s-app" id="s-app">—</div></div>
+    <div class="stat"><div class="stat-label">Creazione utenze</div><div class="stat-val s-usr" id="s-usr">—</div></div>
+    <div class="stat"><div class="stat-label">Reset password</div><div class="stat-val s-pwd" id="s-pwd">—</div></div>
+    <div class="stat"><div class="stat-label">Oltre SLA ⚠</div><div class="stat-val s-sla" id="s-sla">—</div></div>
+  </div>
+
+  <div class="filters">
+    <button class="filter-btn active" onclick="setFilter('all',this)">Tutti</button>
+    <button class="filter-btn" onclick="setFilter('app_enablement',this)">Abilitazioni app</button>
+    <button class="filter-btn" onclick="setFilter('user_creation',this)">Creazione utenze</button>
+    <button class="filter-btn" onclick="setFilter('password_reset',this)">Reset password</button>
+    <button class="filter-btn" onclick="setFilter('pim_request',this)">PIM (wrong queue)</button>
+    <button class="filter-btn" onclick="setFilter('app_troubleshoot',this)">Troubleshoot app</button>
+    <button class="filter-btn" onclick="setFilter('sla_breach',this)" id="filter-sla">⚠ Solo SLA</button>
+  </div>
+
+  <div class="tickets-grid" id="tickets-grid">Caricamento...</div>
+</div>
+
+<div class="toast-c" id="toasts"></div>
+
+<script>
+let allTickets = [];
+let currentFilter = 'all';
+
+const typeLabels = { app_enablement:'Abilitazione app', user_creation:'Creazione utenza', password_reset:'Reset password', pim_request:'PIM redirect', app_troubleshoot:'Troubleshoot app' };
+const typeClasses = { app_enablement:'type-app', user_creation:'type-user', password_reset:'type-pwd', pim_request:'type-pim', app_troubleshoot:'type-trouble' };
+
+async function load() {
+  const d = await fetch('/api/tickets').then(r=>r.json()).catch(()=>null);
+  if(!d) return;
+  allTickets = d.data;
+  document.getElementById('last-upd').textContent = 'Aggiornato: '+new Date().toLocaleTimeString('it-IT');
+  updateStats();
+  render();
+}
+
+function updateStats() {
+  const total = allTickets.length;
+  const byType = allTickets.reduce((a,t)=>{a[t.type]=(a[t.type]||0)+1;return a;},{});
+  const overSLA = allTickets.filter(t=>t.slaDeadline&&new Date(t.slaDeadline)<new Date()).length;
+  document.getElementById('s-tot').textContent = total;
+  document.getElementById('s-app').textContent = byType.app_enablement||0;
+  document.getElementById('s-usr').textContent = byType.user_creation||0;
+  document.getElementById('s-pwd').textContent = byType.password_reset||0;
+  document.getElementById('s-sla').textContent = overSLA;
+  if(overSLA>0) document.getElementById('filter-sla').textContent = '⚠ Oltre SLA ('+overSLA+')';
+}
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function render() {
+  const filtered = currentFilter === 'all' ? allTickets
+    : currentFilter === 'sla_breach' ? allTickets.filter(t=>t.slaDeadline&&new Date(t.slaDeadline)<new Date())
+    : allTickets.filter(t=>t.type===currentFilter);
+  const grid = document.getElementById('tickets-grid');
+  if(!filtered.length){grid.innerHTML='<div class="empty">Nessun ticket in questa categoria.</div>';return;}
+  grid.innerHTML = filtered.map(t=>renderTicket(t)).join('');
+}
+
+function renderTicket(t) {
+  const now = new Date();
+  const sla = t.slaDeadline ? new Date(t.slaDeadline) : null;
+  const diffH = sla ? Math.round((sla-now)/3600000) : null;
+  let slaClass = 'ok', slaText = 'SLA OK', borderClass = 'ok';
+  if(sla) {
+    if(diffH < 0) { slaClass='sla-breach'; slaText='SLA scaduto '+Math.abs(diffH)+'h fa'; borderClass='sla-breach'; }
+    else if(diffH < 4) { slaClass='sla-warn'; slaText='SLA tra '+diffH+'h'; borderClass='sla-warning'; }
+    else { slaText='SLA: '+sla.toLocaleString('it-IT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); }
+  }
+
+  const chatAction = {
+    app_enablement: `Abilita ${t.requestor} su ${t.app||'applicazione'} ${t.profile||''}`,
+    user_creation: `Crea utenza cloud-only per ${t.targetUser||t.requestor}`,
+    password_reset: `Reset password ${t.requestor}`,
+    pim_request: `Richiesta PIM per ${t.requestor} ruolo ${t.roleRequested||'N/A'}`,
+    app_troubleshoot: `Verifica profilo ${t.requestor} su ${t.app||'applicazione'}`
+  }[t.type] || `Gestisci ticket ${t.id}`;
+
+  const statusClass = 'sp-'+(t.status||'pending').replace(/[^a-z_]/g,'');
+
+  return `<div class="ticket ${borderClass}" id="tk-${t.id}">
+    <div class="tk-hdr">
+      <span class="tk-id">${t.id}</span>
+      <span class="tk-type ${typeClasses[t.type]||'type-trouble'}">${typeLabels[t.type]||t.type}</span>
+      <span class="status-pill ${statusClass}">${t.status||'pending'}</span>
+      <span class="tk-sla ${slaClass}">${slaText}</span>
+    </div>
+    <div class="tk-body">
+      <div class="tk-field"><label>Richiedente</label><span>${t.requestor}</span></div>
+      <div class="tk-field"><label>Creato il</label><span>${t.createdDate||'—'}</span></div>
+      <div class="tk-field"><label>${t.app?'Applicazione':t.targetUser?'Target UPN':'Tipo'}</label><span>${t.app||t.targetUser||t.type}</span></div>
+    </div>
+    <div class="tk-note">📋 ${t.note||'—'}</div>
+    <div class="tk-actions">
+      <button class="tk-btn btn-primary" onclick="handleInChat('${encodeURIComponent(chatAction)}')">🤖 Gestisci con Copilota ↗</button>
+      ${t.status==='wrong_queue'?'<button class="tk-btn btn-warn" onclick="redirectPIM(\''+t.id+'\')">↪ Reindirizza PIM</button>':''}
+      ${t.status==='pending_rg'?'<button class="tk-btn btn-secondary" onclick="toast(\'Promemoria autorizzazione RA inviato al richiedente\',\'success\')">📧 Promemoria autorizzazione RA</button>':''}
+      <button class="tk-btn btn-secondary" onclick="toast(\'Ticket '+t.id+' aggiornato\',\'success\')">✓ Segna gestito</button>
+    </div>
+  </div>`;
+}
+
+function handleInChat(encodedMsg) {
+  sessionStorage.setItem('chat_prefill', decodeURIComponent(encodedMsg));
+  window.location.href = '/';
+}
+
+function redirectPIM(ticketId) {
+  toast('Ticket '+ticketId+' reindirizzato al team PIM. Email di notifica generata.','warning');
+}
+
+function toast(msg, type='success', ms=3500) {
+  const c=document.getElementById('toasts'), t=document.createElement('div');
+  t.className='toast '+type;
+  t.innerHTML = (type==='success'?'✓':type==='warning'?'⚠':'✗')+' '+msg;
+  c.appendChild(t);
+  setTimeout(()=>{t.style.animation='si .2s ease reverse';setTimeout(()=>t.remove(),200);},ms);
+}
+
+// Prefill from tickets page
+window.addEventListener('load',()=>{
+  const pf=sessionStorage.getItem('chat_prefill');
+  if(pf){sessionStorage.removeItem('chat_prefill');}
+});
+
+load();
+setInterval(load, 10000);
+</script>
+</body>
+</html>

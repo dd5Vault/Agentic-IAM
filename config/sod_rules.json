@@ -1,0 +1,67 @@
+{
+  "rules": [
+    {
+      "id": "SOD-001",
+      "name": "Payment Creator / Approver",
+      "severity": "CRITICAL",
+      "description": "Lo stesso utente non può creare E approvare pagamenti. Rischio: frode finanziaria diretta.",
+      "conflicting_groups": ["SG-Payment-Creator", "SG-Payment-Approver"],
+      "recommended_action": "Rimuovere SG-Payment-Approver — mantenere solo il ruolo operativo",
+      "compliance": ["SOX", "NIS2"]
+    },
+    {
+      "id": "SOD-002",
+      "name": "Contract Creator / Approver",
+      "severity": "HIGH",
+      "description": "Lo stesso utente non può creare E approvare contratti. Rischio: approvazione non autorizzata.",
+      "conflicting_groups": ["SG-Contract-Creator", "SG-Contract-Approver"],
+      "recommended_action": "Rimuovere SG-Contract-Approver — richiede secondo livello di approvazione",
+      "compliance": ["GDPR", "NIS2"]
+    },
+    {
+      "id": "SOD-003",
+      "name": "Audit Reader / Writer",
+      "severity": "CRITICAL",
+      "description": "Chi scrive i log di audit non può anche leggerli per validarli. Rischio: manipolazione audit trail.",
+      "conflicting_groups": ["SG-Audit-Reader", "SG-Audit-Writer"],
+      "recommended_action": "Rimuovere SG-Audit-Writer — mantenere solo la lettura",
+      "compliance": ["SOX", "DORA", "NIS2"]
+    },
+    {
+      "id": "SOD-004",
+      "name": "IT Manager / GlobalAdmin Shadow",
+      "severity": "HIGH",
+      "description": "Accumulazione di privilegi amministrativi eccessivi. Rischio: privilege escalation non controllata.",
+      "conflicting_groups": ["SG-IT-Managers", "SG-GlobalAdmin-Shadow"],
+      "recommended_action": "Rimuovere SG-GlobalAdmin-Shadow — applicare Least Privilege via PIM",
+      "compliance": ["NIS2", "DORA"]
+    },
+    {
+      "id": "SOD-005",
+      "name": "HR Data Admin / Payroll Approver",
+      "severity": "CRITICAL",
+      "description": "Chi gestisce i dati HR non può approvare il payroll. Rischio: modifica fraudolenta stipendi.",
+      "conflicting_groups": ["SG-HR-DataAdmin", "SG-Payroll-Approver"],
+      "recommended_action": "Separare le responsabilità — ruoli distinti per persone diverse",
+      "compliance": ["SOX", "GDPR"]
+    },
+    {
+      "id": "SOD-006",
+      "name": "Procurement Creator / Budget Owner",
+      "severity": "HIGH",
+      "description": "Chi crea ordini di acquisto non può essere owner del budget di riferimento.",
+      "conflicting_groups": ["SG-Procurement-Creator", "SG-Budget-Owner"],
+      "recommended_action": "Rimuovere SG-Procurement-Creator — mantenere solo approvazione budget",
+      "compliance": ["SOX", "NIS2"]
+    },
+    {
+      "id": "SOD-007",
+      "name": "IAM Admin / Security Auditor",
+      "severity": "HIGH",
+      "description": "Chi gestisce gli accessi non può anche auditare se stesso. Rischio: auto-escalation non rilevata.",
+      "conflicting_groups": ["SG-IAM-Admin", "SG-Security-Auditor"],
+      "recommended_action": "Auditor IAM deve essere un team separato dall'amministrazione",
+      "compliance": ["NIS2", "DORA", "ISO27001"]
+    }
+  ]
+}
